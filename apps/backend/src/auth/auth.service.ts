@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { RegisterUserDto } from 'src/dto/register-user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  register(registerUserDto: RegisterUserDto) {
-    const { name, email } = registerUserDto;
+  async register(registerUserDto: RegisterUserDto) {
+    const { name, email, password } = registerUserDto;
+    const saltRounds = 10;
+    await bcrypt.hash(password, saltRounds);
     return {
       message: 'User registered successfully!',
       user: {
