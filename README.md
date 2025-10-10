@@ -43,7 +43,7 @@ This monorepo is structured with two main applications:
 
 1.  **Clone the repository**:
     ```bash
-    git clone [https://github.com/your-username/syncup.git](https://github.com/Zafar7645/syncup.git)
+    git clone https://github.com/Zafar7645/syncup.git
     cd syncup
     ```
 
