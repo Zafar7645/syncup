@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { RegisterUserDto } from 'src/dto/register-user.dto';
+import { RegisterUserDto } from 'src/auth/dto/register-user.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
