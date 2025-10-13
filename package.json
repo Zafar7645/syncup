@@ -8,5 +8,8 @@
   "scripts": {
     "start:backend": "npm start --workspace=backend",
     "start:frontend": "npm start --workspace=frontend"
+  },
+  "devDependencies": {
+    "prettier-plugin-sql": "^0.19.2"
   }
 }
