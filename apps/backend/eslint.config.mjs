@@ -26,10 +26,18 @@ export default tseslint.config(
     },
   },
   {
+    files: ['**/*.spec.ts'],
+    rules: {
+      // Disable the unbound-method rule for test files because it's
+      // common to pass mock function references to Jest's expect.
+      '@typescript-eslint/unbound-method': 'off',
+    },
+  },
+  {
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-unsafe-argument': 'warn'
+      '@typescript-eslint/no-unsafe-argument': 'warn',
     },
   },
 );
