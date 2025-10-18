@@ -10,6 +10,7 @@ const mockAuthService = {
 
 describe('AuthController', () => {
   let controller: AuthController;
+  let authService: AuthService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -23,6 +24,8 @@ describe('AuthController', () => {
     }).compile();
 
     controller = module.get<AuthController>(AuthController);
+    authService = module.get<AuthService>(AuthService);
+
     jest.clearAllMocks();
   });
 
@@ -43,16 +46,16 @@ describe('AuthController', () => {
         name: 'Test User',
         email: 'test.user@test.com',
       };
-      mockAuthService.register.mockResolvedValue(mockUserResponseDto);
+      (authService.register as jest.Mock).mockResolvedValue(
+        mockUserResponseDto,
+      );
 
       // Act
       const actualUserResponseDto =
         await controller.register(mockRegisterUserDto);
 
       // Assert
-      expect(mockAuthService.register).toHaveBeenCalledWith(
-        mockRegisterUserDto,
-      );
+      expect(authService.register).toHaveBeenCalledWith(mockRegisterUserDto);
       expect(actualUserResponseDto).toEqual(mockUserResponseDto);
     });
   });
