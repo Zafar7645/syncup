@@ -120,10 +120,13 @@ describe('AuthService', () => {
         email: 'test.user@test.com',
         password: 'StrongPassword@123',
       };
+      const saltRounds = 10;
+      const hashedPassword = 'hashed_password';
       const duplicateEmailError = {
         code: '23505',
       };
 
+      (bcrypt.hash as jest.Mock).mockResolvedValue(hashedPassword);
       (
         dataSource.createQueryRunner().manager.save as jest.Mock
       ).mockRejectedValue(duplicateEmailError);
@@ -147,6 +150,17 @@ describe('AuthService', () => {
       expect(
         dataSource.createQueryRunner().startTransaction,
       ).toHaveBeenCalled();
+      expect(bcrypt.hash).toHaveBeenCalledWith(
+        testUserDto.password,
+        saltRounds,
+      );
+      expect(dataSource.createQueryRunner().manager.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: testUserDto.name,
+          email: testUserDto.email,
+          password: hashedPassword,
+        }),
+      );
       expect(
         dataSource.createQueryRunner().commitTransaction,
       ).not.toHaveBeenCalled();
@@ -163,7 +177,11 @@ describe('AuthService', () => {
         email: 'test.user@test.com',
         password: 'StrongPassword@123',
       };
+      const saltRounds = 10;
+      const hashedPassword = 'hashed_password';
       const error = new Error('name should not be empty');
+
+      (bcrypt.hash as jest.Mock).mockResolvedValue(hashedPassword);
       (
         dataSource.createQueryRunner().manager.save as jest.Mock
       ).mockRejectedValue(error);
@@ -177,6 +195,17 @@ describe('AuthService', () => {
       expect(
         dataSource.createQueryRunner().startTransaction,
       ).toHaveBeenCalled();
+      expect(bcrypt.hash).toHaveBeenCalledWith(
+        testUserDto.password,
+        saltRounds,
+      );
+      expect(dataSource.createQueryRunner().manager.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: testUserDto.name,
+          email: testUserDto.email,
+          password: hashedPassword,
+        }),
+      );
       expect(
         dataSource.createQueryRunner().commitTransaction,
       ).not.toHaveBeenCalled();
