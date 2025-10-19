@@ -39,3 +39,9 @@ CREATE TABLE tasks (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW (),
   CONSTRAINT fk_column FOREIGN KEY (column_id) REFERENCES board_columns (id) ON DELETE CASCADE
 );
+
+CREATE INDEX idx_projects_user_id ON projects (user_id);
+
+CREATE INDEX idx_board_columns_project_id ON board_columns (project_id);
+
+CREATE INDEX idx_tasks_column_id ON tasks (column_id);

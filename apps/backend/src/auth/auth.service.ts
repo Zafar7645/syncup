@@ -1,16 +1,20 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { RegisterUserDto } from 'src/auth/dto/register-user.dto';
+import { RegisterUserDto } from '@/auth/dto/register-user.dto';
 import * as bcrypt from 'bcrypt';
 import { DataSource } from 'typeorm';
-import { User } from 'src/users/user.entity';
-import { UserResponseDto } from '../users/user-response.dto';
+import { User } from '@/users/user.entity';
+import { UserResponseDto } from '@/users/user-response.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-  constructor(private dataSource: DataSource) {}
+  constructor(
+    private dataSource: DataSource,
+    private configService: ConfigService,
+  ) {}
   async register(registerUserDto: RegisterUserDto): Promise<UserResponseDto> {
     const { name, email, password } = registerUserDto;
-    const saltRounds = 10;
+    const saltRounds = this.configService.get<number>('BCRYPT_SALT_ROUNDS', 10);
 
     let savedUser: User;
 
@@ -44,7 +48,9 @@ export class AuthService {
         'code' in error &&
         error.code === '23505'
       ) {
-        throw new ConflictException('A user with this email already exists.');
+        throw new ConflictException(
+          'Unable to complete registration at this time.',
+        );
       }
 
       throw error;

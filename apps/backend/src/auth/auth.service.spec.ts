@@ -1,10 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
+import { AuthService } from '@/auth/auth.service';
 import { DataSource } from 'typeorm';
-import { RegisterUserDto } from './dto/register-user.dto';
-import { User } from 'src/users/user.entity';
+import { RegisterUserDto } from '@/auth/dto/register-user.dto';
+import { User } from '@/users/user.entity';
 import * as bcrypt from 'bcrypt';
 import { ConflictException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 jest.mock('bcrypt', () => ({
   hash: jest.fn(),
@@ -25,9 +26,14 @@ const mockDataSource = {
   createQueryRunner: jest.fn().mockReturnValue(mockQueryRunner),
 };
 
+const mockConfigService = {
+  get: jest.fn(),
+};
+
 describe('AuthService', () => {
   let service: AuthService;
   let dataSource: DataSource;
+  let configService: ConfigService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -37,11 +43,16 @@ describe('AuthService', () => {
           provide: DataSource,
           useValue: mockDataSource,
         },
+        {
+          provide: ConfigService,
+          useValue: mockConfigService,
+        },
       ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
     dataSource = module.get<DataSource>(DataSource);
+    configService = module.get<ConfigService>(ConfigService);
 
     jest.clearAllMocks();
   });
@@ -58,7 +69,7 @@ describe('AuthService', () => {
         email: 'test.user@test.com',
         password: 'StrongPassword@123',
       };
-      const saltRounds = 10;
+      const configuredSaltRounds = 12;
       const hashedPassword = 'hashed_password';
 
       const savedUser = new User();
@@ -67,6 +78,7 @@ describe('AuthService', () => {
       savedUser.email = testUserDto.email;
       savedUser.password = hashedPassword;
 
+      (configService.get as jest.Mock).mockReturnValue(configuredSaltRounds);
       (bcrypt.hash as jest.Mock).mockResolvedValue(hashedPassword);
       (
         dataSource.createQueryRunner().manager.save as jest.Mock
@@ -86,7 +98,7 @@ describe('AuthService', () => {
       // Verify the business logic
       expect(bcrypt.hash).toHaveBeenCalledWith(
         testUserDto.password,
-        saltRounds,
+        configuredSaltRounds,
       );
       expect(dataSource.createQueryRunner().manager.save).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -120,29 +132,22 @@ describe('AuthService', () => {
         email: 'test.user@test.com',
         password: 'StrongPassword@123',
       };
-      const saltRounds = 10;
+      const configuredSaltRounds = 10;
       const hashedPassword = 'hashed_password';
       const duplicateEmailError = {
         code: '23505',
       };
 
+      (configService.get as jest.Mock).mockReturnValue(configuredSaltRounds);
       (bcrypt.hash as jest.Mock).mockResolvedValue(hashedPassword);
       (
         dataSource.createQueryRunner().manager.save as jest.Mock
       ).mockRejectedValue(duplicateEmailError);
 
-      try {
-        // Act
-        await service.register(testUserDto);
-        fail('Expected service to throw ConflictException, but it did not.');
-      } catch (error) {
-        // Assert
-        expect(error).toBeInstanceOf(ConflictException);
-        expect(error).toHaveProperty(
-          'message',
-          'A user with this email already exists.',
-        );
-      }
+      // Act & Assert
+      await expect(service.register(testUserDto)).rejects.toBeInstanceOf(
+        ConflictException,
+      );
 
       // Verify transaction is handled correctly
       expect(dataSource.createQueryRunner).toHaveBeenCalled();
@@ -152,7 +157,7 @@ describe('AuthService', () => {
       ).toHaveBeenCalled();
       expect(bcrypt.hash).toHaveBeenCalledWith(
         testUserDto.password,
-        saltRounds,
+        configuredSaltRounds,
       );
       expect(dataSource.createQueryRunner().manager.save).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -177,10 +182,11 @@ describe('AuthService', () => {
         email: 'test.user@test.com',
         password: 'StrongPassword@123',
       };
-      const saltRounds = 10;
+      const configuredSaltRounds = 10;
       const hashedPassword = 'hashed_password';
       const error = new Error('name should not be empty');
 
+      (configService.get as jest.Mock).mockReturnValue(configuredSaltRounds);
       (bcrypt.hash as jest.Mock).mockResolvedValue(hashedPassword);
       (
         dataSource.createQueryRunner().manager.save as jest.Mock
@@ -197,7 +203,7 @@ describe('AuthService', () => {
       ).toHaveBeenCalled();
       expect(bcrypt.hash).toHaveBeenCalledWith(
         testUserDto.password,
-        saltRounds,
+        configuredSaltRounds,
       );
       expect(dataSource.createQueryRunner().manager.save).toHaveBeenCalledWith(
         expect.objectContaining({

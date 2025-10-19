@@ -1,5 +1,9 @@
+/**
+ * Data transfer object for user responses.
+ * Excludes sensitive fields like password hash.
+ */
 export class UserResponseDto {
-  id: number;
-  name: string;
-  email: string;
+  readonly id: number;
+  readonly name: string;
+  readonly email: string;
 }
