@@ -7,6 +7,10 @@
   ],
   "scripts": {
     "start:backend": "npm start --workspace=backend",
-    "start:frontend": "npm start --workspace=frontend"
+    "start:frontend": "npm start --workspace=frontend",
+    "lint": "npm run lint --workspace=backend && npm run lint --workspace=frontend"
+  },
+  "devDependencies": {
+    "prettier-plugin-sql": "^0.19.2"
   }
 }
