@@ -69,7 +69,8 @@ describe('AuthService', () => {
         email: 'test.user@test.com',
         password: 'StrongPassword@123',
       };
-      const configuredSaltRounds = 12;
+      const configuredSaltRounds = '12';
+      const expectedSaltRounds = 12;
       const hashedPassword = 'hashed_password';
 
       const savedUser = new User();
@@ -98,7 +99,7 @@ describe('AuthService', () => {
       // Verify the business logic
       expect(bcrypt.hash).toHaveBeenCalledWith(
         testUserDto.password,
-        configuredSaltRounds,
+        expectedSaltRounds,
       );
       expect(dataSource.createQueryRunner().manager.save).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -132,7 +133,8 @@ describe('AuthService', () => {
         email: 'test.user@test.com',
         password: 'StrongPassword@123',
       };
-      const configuredSaltRounds = 10;
+      const configuredSaltRounds = '2';
+      const expectedSaltRounds = 10;
       const hashedPassword = 'hashed_password';
       const duplicateEmailError = {
         code: '23505',
@@ -157,7 +159,7 @@ describe('AuthService', () => {
       ).toHaveBeenCalled();
       expect(bcrypt.hash).toHaveBeenCalledWith(
         testUserDto.password,
-        configuredSaltRounds,
+        expectedSaltRounds,
       );
       expect(dataSource.createQueryRunner().manager.save).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -182,7 +184,8 @@ describe('AuthService', () => {
         email: 'test.user@test.com',
         password: 'StrongPassword@123',
       };
-      const configuredSaltRounds = 10;
+      const configuredSaltRounds = '17';
+      const expectedSaltRounds = 10;
       const hashedPassword = 'hashed_password';
       const error = new Error('name should not be empty');
 
@@ -203,7 +206,7 @@ describe('AuthService', () => {
       ).toHaveBeenCalled();
       expect(bcrypt.hash).toHaveBeenCalledWith(
         testUserDto.password,
-        configuredSaltRounds,
+        expectedSaltRounds,
       );
       expect(dataSource.createQueryRunner().manager.save).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -220,5 +223,38 @@ describe('AuthService', () => {
       ).toHaveBeenCalled();
       expect(dataSource.createQueryRunner().release).toHaveBeenCalled();
     });
+  });
+
+  it('should set the default value for saltRounds when invalid', async () => {
+    // Arrange
+    const testUserDto: RegisterUserDto = {
+      name: 'Test User',
+      email: 'test.user@test.com',
+      password: 'StrongPassword@123',
+    };
+    const configuredSaltRounds = '';
+    const expectedSaltRounds = 10;
+    const hashedPassword = 'hashed_password';
+
+    const savedUser = new User();
+    savedUser.id = 1;
+    savedUser.name = testUserDto.name;
+    savedUser.email = testUserDto.email;
+    savedUser.password = hashedPassword;
+
+    (configService.get as jest.Mock).mockReturnValue(configuredSaltRounds);
+    (bcrypt.hash as jest.Mock).mockResolvedValue(hashedPassword);
+    (
+      dataSource.createQueryRunner().manager.save as jest.Mock
+    ).mockResolvedValue(savedUser);
+
+    // Act
+    await service.register(testUserDto);
+
+    // Assert
+    expect(bcrypt.hash).toHaveBeenCalledWith(
+      testUserDto.password,
+      expectedSaltRounds,
+    );
   });
 });

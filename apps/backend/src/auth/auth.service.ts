@@ -14,7 +14,11 @@ export class AuthService {
   ) {}
   async register(registerUserDto: RegisterUserDto): Promise<UserResponseDto> {
     const { name, email, password } = registerUserDto;
-    const saltRounds = this.configService.get<number>('BCRYPT_SALT_ROUNDS', 10);
+    const raw = this.configService.get<string>('BCRYPT_SALT_ROUNDS');
+    let saltRounds = parseInt(raw ?? '', 10);
+    if (!Number.isInteger(saltRounds) || saltRounds < 4 || saltRounds > 15) {
+      saltRounds = 10;
+    }
 
     let savedUser: User;
 
