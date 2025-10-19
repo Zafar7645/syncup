@@ -180,14 +180,14 @@ describe('AuthService', () => {
     it('should rollback a transaction when any generic error occurs', async () => {
       // Arrange
       const testUserDto: RegisterUserDto = {
-        name: '',
+        name: 'Test User',
         email: 'test.user@test.com',
         password: 'StrongPassword@123',
       };
       const configuredSaltRounds = '17';
       const expectedSaltRounds = 10;
       const hashedPassword = 'hashed_password';
-      const error = new Error('name should not be empty');
+      const error = new Error('Database connection lost.');
 
       (configService.get as jest.Mock).mockReturnValue(configuredSaltRounds);
       (bcrypt.hash as jest.Mock).mockResolvedValue(hashedPassword);
