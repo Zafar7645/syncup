@@ -223,38 +223,38 @@ describe('AuthService', () => {
       ).toHaveBeenCalled();
       expect(dataSource.createQueryRunner().release).toHaveBeenCalled();
     });
-  });
 
-  it('should set the default value for saltRounds when invalid', async () => {
-    // Arrange
-    const testUserDto: RegisterUserDto = {
-      name: 'Test User',
-      email: 'test.user@test.com',
-      password: 'StrongPassword@123',
-    };
-    const configuredSaltRounds = '';
-    const expectedSaltRounds = 10;
-    const hashedPassword = 'hashed_password';
+    it('should set the default value for saltRounds when invalid', async () => {
+      // Arrange
+      const testUserDto: RegisterUserDto = {
+        name: 'Test User',
+        email: 'test.user@test.com',
+        password: 'StrongPassword@123',
+      };
+      const configuredSaltRounds = '';
+      const expectedSaltRounds = 10;
+      const hashedPassword = 'hashed_password';
 
-    const savedUser = new User();
-    savedUser.id = 1;
-    savedUser.name = testUserDto.name;
-    savedUser.email = testUserDto.email;
-    savedUser.password = hashedPassword;
+      const savedUser = new User();
+      savedUser.id = 1;
+      savedUser.name = testUserDto.name;
+      savedUser.email = testUserDto.email;
+      savedUser.password = hashedPassword;
 
-    (configService.get as jest.Mock).mockReturnValue(configuredSaltRounds);
-    (bcrypt.hash as jest.Mock).mockResolvedValue(hashedPassword);
-    (
-      dataSource.createQueryRunner().manager.save as jest.Mock
-    ).mockResolvedValue(savedUser);
+      (configService.get as jest.Mock).mockReturnValue(configuredSaltRounds);
+      (bcrypt.hash as jest.Mock).mockResolvedValue(hashedPassword);
+      (
+        dataSource.createQueryRunner().manager.save as jest.Mock
+      ).mockResolvedValue(savedUser);
 
-    // Act
-    await service.register(testUserDto);
+      // Act
+      await service.register(testUserDto);
 
-    // Assert
-    expect(bcrypt.hash).toHaveBeenCalledWith(
-      testUserDto.password,
-      expectedSaltRounds,
-    );
+      // Assert
+      expect(bcrypt.hash).toHaveBeenCalledWith(
+        testUserDto.password,
+        expectedSaltRounds,
+      );
+    });
   });
 });
