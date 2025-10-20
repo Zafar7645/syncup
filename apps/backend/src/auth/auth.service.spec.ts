@@ -4,11 +4,16 @@ import { DataSource } from 'typeorm';
 import { RegisterUserDto } from '@/auth/dto/register-user.dto';
 import { User } from '@/users/user.entity';
 import * as bcrypt from 'bcrypt';
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { UsersService } from '@/users/users.service';
+import { JwtService } from '@nestjs/jwt';
+import { LoginUserDto } from '@/auth/dto/login-user.dto';
+import { AccessTokenDto } from '@/auth/dto/access-token.dto';
 
 jest.mock('bcrypt', () => ({
   hash: jest.fn(),
+  compare: jest.fn(),
 }));
 
 const mockQueryRunner = {
@@ -30,10 +35,20 @@ const mockConfigService = {
   get: jest.fn(),
 };
 
+const mockUsersService = {
+  findOneByEmail: jest.fn(),
+};
+
+const mockJwtService = {
+  sign: jest.fn(),
+};
+
 describe('AuthService', () => {
   let service: AuthService;
   let dataSource: DataSource;
   let configService: ConfigService;
+  let usersService: UsersService;
+  let jwtService: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -47,12 +62,22 @@ describe('AuthService', () => {
           provide: ConfigService,
           useValue: mockConfigService,
         },
+        {
+          provide: UsersService,
+          useValue: mockUsersService,
+        },
+        {
+          provide: JwtService,
+          useValue: mockJwtService,
+        },
       ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
     dataSource = module.get<DataSource>(DataSource);
     configService = module.get<ConfigService>(ConfigService);
+    usersService = module.get<UsersService>(UsersService);
+    jwtService = module.get<JwtService>(JwtService);
 
     jest.clearAllMocks();
   });
@@ -255,6 +280,97 @@ describe('AuthService', () => {
         testUserDto.password,
         expectedSaltRounds,
       );
+    });
+  });
+
+  describe('login', () => {
+    it('should return the access token when credentials are valid', async () => {
+      // Arrange
+      const mockLoginUserDto: LoginUserDto = {
+        email: 'test.user@test.com',
+        password: 'PlainTextPassword',
+      };
+
+      const testUser = new User();
+      testUser.id = 1;
+      testUser.email = 'test.user@test.com';
+      testUser.password = 'SomeRandomHashedPassword';
+
+      const expectedPayload = {
+        sub: testUser.id,
+        email: testUser.email,
+      };
+      const expectedAccessToken = 'SomeReallyLongAccessTokenText';
+      const expectedResponse: AccessTokenDto = {
+        access_token: expectedAccessToken,
+      };
+
+      (usersService.findOneByEmail as jest.Mock).mockResolvedValue(testUser);
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+      (jwtService.sign as jest.Mock).mockReturnValue(expectedAccessToken);
+
+      // Act
+      const response = await service.login(mockLoginUserDto);
+
+      // Assert
+      expect(usersService.findOneByEmail).toHaveBeenCalledWith(
+        mockLoginUserDto.email,
+      );
+      expect(bcrypt.compare).toHaveBeenCalledWith(
+        mockLoginUserDto.password,
+        testUser.password,
+      );
+      expect(jwtService.sign).toHaveBeenCalledWith(expectedPayload);
+      expect(response).toEqual(expectedResponse);
+    });
+
+    it('should throw Unauthorized exception when user does not exists', async () => {
+      // Arrange
+      const mockLoginUserDto: LoginUserDto = {
+        email: 'nouser@test.com',
+        password: 'PlainTextPassword',
+      };
+
+      (usersService.findOneByEmail as jest.Mock).mockResolvedValue(null);
+
+      // Act & Assert
+      await expect(service.login(mockLoginUserDto)).rejects.toBeInstanceOf(
+        UnauthorizedException,
+      );
+      expect(usersService.findOneByEmail).toHaveBeenCalledWith(
+        mockLoginUserDto.email,
+      );
+      expect(bcrypt.compare).not.toHaveBeenCalled();
+      expect(jwtService.sign).not.toHaveBeenCalled();
+    });
+
+    it('should throw Unauthorized exception when passwords do not match', async () => {
+      // Arrange
+      const mockLoginUserDto: LoginUserDto = {
+        email: 'test.user@test.com',
+        password: 'PlainTextPassword',
+      };
+
+      const testUser = new User();
+      testUser.id = 1;
+      testUser.email = 'test.user@test.com';
+      testUser.password = 'SomeRandomHashedPassword';
+
+      (usersService.findOneByEmail as jest.Mock).mockResolvedValue(testUser);
+      (bcrypt.compare as jest.Mock).mockResolvedValue(false);
+
+      // Act & Assert
+      await expect(service.login(mockLoginUserDto)).rejects.toBeInstanceOf(
+        UnauthorizedException,
+      );
+      expect(usersService.findOneByEmail).toHaveBeenCalledWith(
+        mockLoginUserDto.email,
+      );
+      expect(bcrypt.compare).toHaveBeenCalledWith(
+        mockLoginUserDto.password,
+        testUser.password,
+      );
+      expect(jwtService.sign).not.toHaveBeenCalled();
     });
   });
 });

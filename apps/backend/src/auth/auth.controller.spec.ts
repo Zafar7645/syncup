@@ -3,9 +3,12 @@ import { AuthController } from '@/auth/auth.controller';
 import { AuthService } from '@/auth/auth.service';
 import { RegisterUserDto } from '@/auth/dto/register-user.dto';
 import { UserResponseDto } from '@/users/user-response.dto';
+import { LoginUserDto } from './dto/login-user.dto';
+import { AccessTokenDto } from './dto/access-token.dto';
 
 const mockAuthService = {
   register: jest.fn(),
+  login: jest.fn(),
 };
 
 describe('AuthController', () => {
@@ -57,6 +60,28 @@ describe('AuthController', () => {
       // Assert
       expect(authService.register).toHaveBeenCalledWith(mockRegisterUserDto);
       expect(actualUserResponseDto).toEqual(mockUserResponseDto);
+    });
+  });
+
+  describe('login', () => {
+    it('should call the login method of the Auth Service', async () => {
+      // Arrange
+      const mockLoginUserDto: LoginUserDto = {
+        email: 'test.user@test.com',
+        password: 'PlainTextPassword',
+      };
+      const expectedResponse: AccessTokenDto = {
+        access_token: 'SomeReallyLongAccessTokenText',
+      };
+
+      (authService.login as jest.Mock).mockResolvedValue(expectedResponse);
+
+      // Act
+      const actualResponse = await controller.login(mockLoginUserDto);
+
+      // Assert
+      expect(authService.login).toHaveBeenCalledWith(mockLoginUserDto);
+      expect(actualResponse).toEqual(expectedResponse);
     });
   });
 });
