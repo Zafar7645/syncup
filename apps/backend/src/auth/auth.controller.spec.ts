@@ -5,6 +5,7 @@ import { RegisterUserDto } from '@/auth/dto/register-user.dto';
 import { UserResponseDto } from '@/users/user-response.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AccessTokenDto } from './dto/access-token.dto';
+import { ConflictException, UnauthorizedException } from '@nestjs/common';
 
 const mockAuthService = {
   register: jest.fn(),
@@ -61,6 +62,45 @@ describe('AuthController', () => {
       expect(authService.register).toHaveBeenCalledWith(mockRegisterUserDto);
       expect(actualUserResponseDto).toEqual(mockUserResponseDto);
     });
+
+    it('should propagate ConflictException from the Auth Service', async () => {
+      // Arrange
+      const mockRegisterUserDto: RegisterUserDto = {
+        name: 'Test User',
+        email: 'test.user@test.com',
+        password: 'StrongPassword@123',
+      };
+
+      (authService.register as jest.Mock).mockRejectedValue(
+        new ConflictException('Unable to complete registration at this time.'),
+      );
+
+      // Act & Assert
+      await expect(controller.register(mockRegisterUserDto)).rejects.toThrow(
+        ConflictException,
+      );
+      await expect(controller.register(mockRegisterUserDto)).rejects.toThrow(
+        'Unable to complete registration at this time.',
+      );
+    });
+
+    it('should propagate any general error from the Auth Service', async () => {
+      // Arrange
+      const mockRegisterUserDto: RegisterUserDto = {
+        name: 'Test User',
+        email: 'test.user@test.com',
+        password: 'StrongPassword@123',
+      };
+
+      (authService.register as jest.Mock).mockRejectedValue(
+        new Error('Something went wrong.'),
+      );
+
+      // Act & Assert
+      await expect(controller.register(mockRegisterUserDto)).rejects.toThrow(
+        'Something went wrong.',
+      );
+    });
   });
 
   describe('login', () => {
@@ -82,6 +122,26 @@ describe('AuthController', () => {
       // Assert
       expect(authService.login).toHaveBeenCalledWith(mockLoginUserDto);
       expect(actualResponse).toEqual(expectedResponse);
+    });
+
+    it('should propagate UnauthorizedException from the Auth Service', async () => {
+      // Arrange
+      const mockLoginUserDto: LoginUserDto = {
+        email: 'test.user@test.com',
+        password: 'PlainTextPassword',
+      };
+
+      (authService.login as jest.Mock).mockRejectedValue(
+        new UnauthorizedException('Invalid credentials.'),
+      );
+
+      // Act & Assert
+      await expect(controller.login(mockLoginUserDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
+      await expect(controller.login(mockLoginUserDto)).rejects.toThrow(
+        'Invalid credentials.',
+      );
     });
   });
 });

@@ -40,7 +40,7 @@ const mockUsersService = {
 };
 
 const mockJwtService = {
-  sign: jest.fn(),
+  signAsync: jest.fn(),
 };
 
 describe('AuthService', () => {
@@ -307,7 +307,7 @@ describe('AuthService', () => {
 
       (usersService.findOneByEmail as jest.Mock).mockResolvedValue(testUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
-      (jwtService.sign as jest.Mock).mockReturnValue(expectedAccessToken);
+      (jwtService.signAsync as jest.Mock).mockReturnValue(expectedAccessToken);
 
       // Act
       const response = await service.login(mockLoginUserDto);
@@ -320,7 +320,7 @@ describe('AuthService', () => {
         mockLoginUserDto.password,
         testUser.password,
       );
-      expect(jwtService.sign).toHaveBeenCalledWith(expectedPayload);
+      expect(jwtService.signAsync).toHaveBeenCalledWith(expectedPayload);
       expect(response).toEqual(expectedResponse);
     });
 
@@ -341,7 +341,7 @@ describe('AuthService', () => {
         mockLoginUserDto.email,
       );
       expect(bcrypt.compare).not.toHaveBeenCalled();
-      expect(jwtService.sign).not.toHaveBeenCalled();
+      expect(jwtService.signAsync).not.toHaveBeenCalled();
     });
 
     it('should throw Unauthorized exception when passwords do not match', async () => {
@@ -370,7 +370,7 @@ describe('AuthService', () => {
         mockLoginUserDto.password,
         testUser.password,
       );
-      expect(jwtService.sign).not.toHaveBeenCalled();
+      expect(jwtService.signAsync).not.toHaveBeenCalled();
     });
   });
 });

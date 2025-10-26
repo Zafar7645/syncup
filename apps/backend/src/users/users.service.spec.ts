@@ -16,7 +16,7 @@ const mockUserRepository = {
 
 describe('UsersService', () => {
   let service: UsersService;
-  let userRespository: Repository<User>;
+  let userRepository: Repository<User>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -30,7 +30,7 @@ describe('UsersService', () => {
     }).compile();
 
     service = module.get<UsersService>(UsersService);
-    userRespository = module.get<Repository<User>>(getRepositoryToken(User));
+    userRepository = module.get<Repository<User>>(getRepositoryToken(User));
 
     jest.clearAllMocks();
   });
@@ -45,15 +45,15 @@ describe('UsersService', () => {
       const mockEmail = 'test.user@test.com';
       const expectedUser = new User();
 
-      (
-        userRespository.createQueryBuilder().getOne as jest.Mock
-      ).mockReturnValue(expectedUser);
+      (userRepository.createQueryBuilder().getOne as jest.Mock).mockReturnValue(
+        expectedUser,
+      );
 
       // Act
       const user = await service.findOneByEmail(mockEmail);
 
       // Assert
-      expect(userRespository.createQueryBuilder).toHaveBeenCalledWith('user');
+      expect(userRepository.createQueryBuilder).toHaveBeenCalledWith('user');
       expect(mockQueryBuilder.where).toHaveBeenCalledWith(
         'user.email = :email',
         { email: mockEmail },

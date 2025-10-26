@@ -7,11 +7,11 @@ import { Repository } from 'typeorm';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private userRespository: Repository<User>,
+    private userRepository: Repository<User>,
   ) {}
 
   async findOneByEmail(email: string): Promise<User | null> {
-    return this.userRespository
+    return this.userRepository
       .createQueryBuilder('user')
       .where('user.email = :email', { email })
       .addSelect('user.password')

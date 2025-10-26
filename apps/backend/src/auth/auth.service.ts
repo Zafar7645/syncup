@@ -12,7 +12,7 @@ import { ConfigService } from '@nestjs/config';
 import { UsersService } from '@/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from '@/auth/dto/login-user.dto';
-import { AccessTokenDto } from './dto/access-token.dto';
+import { AccessTokenDto } from '@/auth/dto/access-token.dto';
 
 @Injectable()
 export class AuthService {
@@ -74,7 +74,8 @@ export class AuthService {
   }
 
   async login(loginUserDto: LoginUserDto): Promise<AccessTokenDto> {
-    const user = await this.usersService.findOneByEmail(loginUserDto.email);
+    const lowerCaseEmail = loginUserDto.email.toLowerCase().trim();
+    const user = await this.usersService.findOneByEmail(lowerCaseEmail);
 
     if (!user) {
       throw new UnauthorizedException({
@@ -98,7 +99,7 @@ export class AuthService {
       email: user.email,
     };
 
-    const accessToken = this.jwtService.sign(payload);
+    const accessToken = await this.jwtService.signAsync(payload);
 
     return {
       access_token: accessToken,
