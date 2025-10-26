@@ -76,12 +76,12 @@ describe('AuthController', () => {
       );
 
       // Act & Assert
-      await expect(controller.register(mockRegisterUserDto)).rejects.toThrow(
-        ConflictException,
-      );
-      await expect(controller.register(mockRegisterUserDto)).rejects.toThrow(
-        'Unable to complete registration at this time.',
-      );
+      await expect(
+        controller.register(mockRegisterUserDto),
+      ).rejects.toMatchObject({
+        name: 'ConflictException',
+        message: 'Unable to complete registration at this time.',
+      });
     });
 
     it('should propagate any general error from the Auth Service', async () => {
@@ -136,12 +136,10 @@ describe('AuthController', () => {
       );
 
       // Act & Assert
-      await expect(controller.login(mockLoginUserDto)).rejects.toThrow(
-        UnauthorizedException,
-      );
-      await expect(controller.login(mockLoginUserDto)).rejects.toThrow(
-        'Invalid credentials.',
-      );
+      await expect(controller.login(mockLoginUserDto)).rejects.toMatchObject({
+        name: 'UnauthorizedException',
+        message: 'Invalid credentials.',
+      });
     });
   });
 });
