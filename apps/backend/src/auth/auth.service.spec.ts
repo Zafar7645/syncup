@@ -3,7 +3,7 @@ import { AuthService } from '@/auth/auth.service';
 import { DataSource } from 'typeorm';
 import { RegisterUserDto } from '@/auth/dto/register-user.dto';
 import { User } from '@/users/user.entity';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '@/users/users.service';
@@ -11,7 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from '@/auth/dto/login-user.dto';
 import { AccessTokenDto } from '@/auth/dto/access-token.dto';
 
-jest.mock('bcrypt', () => ({
+jest.mock('bcryptjs', () => ({
   hash: jest.fn(),
   compare: jest.fn(),
 }));

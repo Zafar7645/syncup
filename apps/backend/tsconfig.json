@@ -15,7 +15,10 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@shared/validation/*": [
+        "../../libs/shared-validation/src/*"
+      ]
     },
     "types": ["node", "jest"],
     "incremental": true,
