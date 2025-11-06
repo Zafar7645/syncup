@@ -1,10 +1,8 @@
+import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
 import {
-  IsEmail,
-  IsNotEmpty,
-  IsString,
-  Matches,
-  MinLength,
-} from 'class-validator';
+  PASSWORD_REGEX_STRING,
+  PASSWORD_VALIDATION_MESSAGE,
+} from '@shared/validation/password.constants';
 
 export class RegisterUserDto {
   @IsString()
@@ -16,10 +14,8 @@ export class RegisterUserDto {
   email: string;
 
   @IsNotEmpty()
-  @MinLength(8, { message: 'Password must be at least 8 characters long.' })
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()]).{8,}$/, {
-    message:
-      'Password is too weak. It must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+  @Matches(new RegExp(PASSWORD_REGEX_STRING), {
+    message: PASSWORD_VALIDATION_MESSAGE,
   })
   password: string;
 }
