@@ -17,7 +17,8 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "@shared/validation/*": ["../../libs/shared-validation/src/*"]
+      "@shared/validation/*": ["../../libs/shared-validation/src/*"],
+      "@shared/dtos/*": ["../../libs/shared-dtos/src/*"]
     }
   },
   "angularCompilerOptions": {

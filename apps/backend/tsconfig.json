@@ -16,9 +16,8 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "@shared/validation/*": [
-        "../../libs/shared-validation/src/*"
-      ]
+      "@shared/validation/*": ["../../libs/shared-validation/src/*"],
+      "@shared/dtos/*": ["../../libs/shared-dtos/src/*"]
     },
     "types": ["node", "jest"],
     "incremental": true,
@@ -29,5 +28,6 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "useUnknownInCatchVariables": true
-  }
+  },
+  "include": ["src/**/*", "../../libs/**/*"]
 }

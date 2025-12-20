@@ -7,15 +7,15 @@ import {
 export class RegisterUserDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @IsNotEmpty()
   @IsEmail()
-  email: string;
+  email!: string;
 
   @IsNotEmpty()
   @Matches(new RegExp(PASSWORD_REGEX_STRING), {
     message: PASSWORD_VALIDATION_MESSAGE,
   })
-  password: string;
+  password!: string;
 }

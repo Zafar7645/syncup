@@ -82,7 +82,8 @@
     "testEnvironment": "node",
     "moduleNameMapper": {
       "@/(.*)$": "<rootDir>/$1",
-      "@shared/validation/(.*)": "<rootDir>/../../../libs/shared-validation/src/$1"
+      "@shared/validation/(.*)": "<rootDir>/../../../libs/shared-validation/src/$1",
+      "@shared/dtos/(.*)": "<rootDir>/../../../libs/shared-dtos/src/$1"
     }
   }
 }
