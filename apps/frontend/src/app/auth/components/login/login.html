@@ -1,1 +1,29 @@
-<p>login works!</p>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <label for="email">Email</label>
+  <input id="name" type="email" formControlName="email" />
+  @if (email?.invalid && (email?.dirty || email?.touched)) {
+    @if (email?.errors?.['required']) {
+      <small>Email is required.</small>
+    }
+    @if (email?.errors?.['pattern']) {
+      <small>Please enter a valid email address. (e.g. user&#64;domain.com)</small>
+    }
+  }
+
+  <label for="password">Password</label>
+  <input id="password" type="password" formControlName="password" />
+  @if (password?.invalid && (password?.dirty || password?.touched)) {
+    @if (password?.errors?.['required']) {
+      <small>Password is required.</small>
+    }
+    @if (password?.errors?.['pattern']) {
+      <small>{{ passwordValidationMessage }}</small>
+    }
+  }
+
+  <button id="submit" type="submit" [disabled]="!loginForm.valid">Log In</button>
+
+  @if (errorMessage) {
+    <div>{{ errorMessage }}</div>
+  }
+</form>
