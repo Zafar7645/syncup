@@ -1,0 +1,35 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <label for="name">Name</label>
+  <input id="name" type="text" formControlName="name" />
+  @if (name?.invalid && (name?.touched || name?.dirty)) {
+    <small>Name is required.</small>
+  }
+
+  <label for="email">Email</label>
+  <input id="email" type="email" formControlName="email" />
+  @if (email?.invalid && (email?.touched || email?.dirty)) {
+    @if (email?.errors?.['required']) {
+      <small>Email is required.</small>
+    }
+    @if (email?.errors?.['pattern']) {
+      <small>Please enter a valid email address. (e.g. user&#64;domain.com)</small>
+    }
+  }
+
+  <label for="password">Password</label>
+  <input id="password" type="password" formControlName="password" />
+  @if (password?.invalid && (password?.touched || password?.dirty)) {
+    @if (password?.errors?.['required']) {
+      <small>Password is required.</small>
+    }
+    @if (password?.errors?.['pattern']) {
+      <small>{{ passwordValidationMessage }}</small>
+    }
+  }
+
+  <button id="submit" type="submit" [disabled]="!registerForm.valid">Create Account</button>
+
+  @if (errorMessage) {
+    <div>{{ errorMessage }}</div>
+  }
+</form>

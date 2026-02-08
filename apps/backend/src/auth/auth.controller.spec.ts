@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from '@/auth/auth.controller';
 import { AuthService } from '@/auth/auth.service';
-import { RegisterUserDto } from '@/auth/dto/register-user.dto';
-import { UserResponseDto } from '@/users/user-response.dto';
-import { LoginUserDto } from '@/auth/dto/login-user.dto';
-import { AccessTokenDto } from '@/auth/dto/access-token.dto';
+import { RegisterUserDto } from '@shared/dtos/auth/register-user.dto';
+import { UserResponseDto } from '@shared/dtos/user/user-response.dto';
+import { LoginUserDto } from '@shared/dtos/auth/login-user.dto';
+import { AccessTokenDto } from '@shared/dtos/auth/access-token.dto';
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
 
 const mockAuthService = {

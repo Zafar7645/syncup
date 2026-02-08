@@ -4,10 +4,10 @@ export class LoginUserDto {
   @IsNotEmpty()
   @IsEmail()
   @MaxLength(255)
-  email: string;
+  email!: string;
 
   @IsNotEmpty()
   @IsString()
   @MaxLength(100)
-  password: string;
+  password!: string;
 }
