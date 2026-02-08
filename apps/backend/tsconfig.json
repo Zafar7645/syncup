@@ -29,5 +29,5 @@
     "noFallthroughCasesInSwitch": false,
     "useUnknownInCatchVariables": true
   },
-  "include": ["src/**/*", "../../libs/**/*"]
+  "include": ["src/**/*", "test/**/*", "../../libs/**/*"]
 }
