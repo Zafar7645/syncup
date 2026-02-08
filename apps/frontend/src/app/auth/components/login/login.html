@@ -1,6 +1,6 @@
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
   <label for="email">Email</label>
-  <input id="name" type="email" formControlName="email" />
+  <input id="emial" type="email" formControlName="email" />
   @if (email?.invalid && (email?.dirty || email?.touched)) {
     @if (email?.errors?.['required']) {
       <small>Email is required.</small>

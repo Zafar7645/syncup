@@ -50,7 +50,7 @@ export class Login {
       },
       error: (err) => {
         if (err.error && err.error.message) {
-          this.errorMessage = Array.isArray(err.error.errorMessage)
+          this.errorMessage = Array.isArray(err.error.message)
             ? err.error.message[0]
             : err.error.message;
         } else {

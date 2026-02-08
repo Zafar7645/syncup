@@ -60,7 +60,7 @@ describe('Login', () => {
   });
 
   describe('onSubmit', () => {
-    it('should call markAllAsTouched on registerForm and return when form is invalid', () => {
+    it('should call markAllAsTouched on loginForm and return when form is invalid', () => {
       // Arrange
       component.loginForm.setValue({
         email: '',
@@ -100,12 +100,12 @@ describe('Login', () => {
       // Arrange
       const mockUserData = {
         email: 'email@test.com',
-        password: 'TestPassword@123',
+        password: 'TestPassword#123',
       };
       component.loginForm.setValue(mockUserData);
       const errorResponse = {
         error: {
-          message: 'Unable to complete registration.',
+          message: 'Invalid credentials.',
         },
       };
       authService.login.and.returnValue(throwError(() => errorResponse));
@@ -115,7 +115,7 @@ describe('Login', () => {
 
       // Assert
       expect(authService.login).toHaveBeenCalledWith(mockUserData);
-      expect(component.errorMessage).toBe('Unable to complete registration.');
+      expect(component.errorMessage).toBe('Invalid credentials.');
     });
 
     it('should set the default error message on empty response from server', () => {

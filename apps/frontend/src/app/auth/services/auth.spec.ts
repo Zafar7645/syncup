@@ -57,7 +57,7 @@ describe('Auth', () => {
   });
 
   describe('login', () => {
-    it('should POST to /login an return acces token', () => {
+    it('should POST to /login and return acces token', () => {
       const mockLoginData: LoginUserDto = {
         email: 'email@test.com',
         password: 'TestPassword@123',
