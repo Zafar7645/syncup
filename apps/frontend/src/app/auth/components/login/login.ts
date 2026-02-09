@@ -8,6 +8,7 @@ import {
 import { EMAIL_REGEX_STRING } from '@shared/validation/email.constants';
 import { LoginUserDto } from '@shared/dtos/auth/login-user.dto';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +19,7 @@ import { CommonModule } from '@angular/common';
 export class Login {
   private formBuilder = inject(FormBuilder);
   private authService = inject(Auth);
+  private router = inject(Router);
 
   loginForm = this.formBuilder.group({
     email: ['', [Validators.required, Validators.pattern(new RegExp(EMAIL_REGEX_STRING))]],
@@ -43,10 +45,10 @@ export class Login {
 
     const userData = this.loginForm.value as LoginUserDto;
     this.authService.login(userData).subscribe({
-      next: (response) => {
+      next: () => {
         this.errorMessage = null;
-        localStorage.setItem('access_token', response.access_token);
-        console.log('Login successful!', response);
+        this.loginForm.reset();
+        this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         if (err.error && err.error.message) {

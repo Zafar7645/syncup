@@ -45,10 +45,17 @@ export class AuthService {
       savedUser = await queryRunner.manager.save(user);
       await queryRunner.commitTransaction();
 
+      const payload = {
+        sub: savedUser.id,
+        email: savedUser.email,
+      };
+      const accessToken = await this.jwtService.signAsync(payload);
+
       const response: UserResponseDto = {
         id: savedUser.id,
         name: savedUser.name,
         email: savedUser.email,
+        access_token: accessToken,
       };
 
       return response;
