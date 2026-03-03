@@ -8,6 +8,7 @@ import {
 import { EMAIL_REGEX_STRING } from '@shared/validation/email.constants';
 import { Auth } from '@/app/auth/services/auth';
 import { RegisterUserDto } from '@shared/dtos/auth/register-user.dto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -18,6 +19,7 @@ import { RegisterUserDto } from '@shared/dtos/auth/register-user.dto';
 export class Register {
   private formBuilder = inject(FormBuilder);
   private authService = inject(Auth);
+  private router = inject(Router);
 
   registerForm = this.formBuilder.group({
     name: ['', [Validators.required]],
@@ -48,9 +50,10 @@ export class Register {
 
     const userData = this.registerForm.value as RegisterUserDto;
     this.authService.register(userData).subscribe({
-      next: (response) => {
+      next: () => {
         this.errorMessage = null;
-        console.log('Registration successful!', response);
+        this.registerForm.reset();
+        this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         if (err.error && err.error.message) {

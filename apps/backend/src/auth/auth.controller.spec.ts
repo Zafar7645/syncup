@@ -49,6 +49,7 @@ describe('AuthController', () => {
         id: 1,
         name: 'Test User',
         email: 'test.user@test.com',
+        access_token: 'SomeReallyLongAccessTokenText',
       };
       (authService.register as jest.Mock).mockResolvedValue(
         mockUserResponseDto,

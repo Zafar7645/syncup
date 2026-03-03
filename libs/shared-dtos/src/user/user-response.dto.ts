@@ -6,4 +6,5 @@ export class UserResponseDto {
   readonly id!: number;
   readonly name!: string;
   readonly email!: string;
+  readonly access_token!: string;
 }

@@ -89,6 +89,7 @@ describe('Register', () => {
         id: 1,
         name: 'Test',
         email: 'email@test.com',
+        access_token: 'access_token',
       };
       authService.register.and.returnValue(of(mockResponse));
 

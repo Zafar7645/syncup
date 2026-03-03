@@ -42,6 +42,7 @@ describe('Auth', () => {
         id: 1,
         name: 'Test',
         email: 'email@test.com',
+        access_token: 'access_token',
       };
 
       service.register(mockRegisterData).subscribe((response) => {
