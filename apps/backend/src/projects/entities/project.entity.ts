@@ -20,11 +20,11 @@ export class Project {
   @Column({ nullable: true })
   description: string;
 
-  @Column()
+  @Column({ name: 'user_id' })
   userId: number;
 
   @ManyToOne(() => User, (user) => user.projects, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
   @CreateDateColumn({ name: 'created_at' })

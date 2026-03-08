@@ -1,8 +1,9 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
 
 export class CreateProjectDto {
   @IsString()
   @IsNotEmpty()
+  @Matches(/\S/, { message: 'name must contain non-whitespace characters' })
   name: string;
 
   @IsString()
