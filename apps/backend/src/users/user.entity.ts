@@ -1,9 +1,11 @@
+import { Project } from '@/projects/entities/project.entity';
 import {
   BeforeInsert,
   BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -35,4 +37,7 @@ export class User {
       this.email = this.email.trim().toLowerCase();
     }
   }
+
+  @OneToMany(() => Project, (project) => project.user)
+  projects: Project[];
 }
