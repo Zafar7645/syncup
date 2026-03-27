@@ -109,28 +109,29 @@ export class TasksService {
   }
 
   async update(id: number, updateTaskDto: UpdateTaskDto, userId: number) {
-    // 1. Initial auth check (fast fail if user doesn't own the task to begin with)
     const task = await this.verifyTaskAccess(id, userId);
 
-    // 2. Check if the task is being moved to a DIFFERENT column
     if (
       updateTaskDto.columnId !== undefined &&
       updateTaskDto.columnId !== task.columnId
     ) {
       return await this.tasksRepository.manager.transaction(
         async (transactionalManager) => {
-          // a. Re-read and lock the SOURCE TASK to prevent lost updates
           const lockedTask = await transactionalManager
             .createQueryBuilder(Task, 'task')
+            .innerJoinAndSelect('task.column', 'column')
+            .innerJoinAndSelect('column.project', 'project')
             .where('task.id = :id', { id })
             .setLock('pessimistic_write')
             .getOne();
 
-          if (!lockedTask) {
-            throw new NotFoundException('Task no longer exists');
+          if (!lockedTask) throw new NotFoundException('Task not found');
+          if (lockedTask.column.project.userId !== userId) {
+            throw new ForbiddenException(
+              'You do not have permission to modify this task',
+            );
           }
 
-          // b. Fetch, join, and lock the TARGET COLUMN
           const targetColumn = await transactionalManager
             .createQueryBuilder(BoardColumn, 'column')
             .leftJoinAndSelect('column.project', 'project')
@@ -138,7 +139,6 @@ export class TasksService {
             .setLock('pessimistic_write')
             .getOne();
 
-          // c. Validate target column access (Inside the transaction lock)
           if (!targetColumn) {
             throw new NotFoundException('Target column not found');
           }
@@ -148,29 +148,21 @@ export class TasksService {
             );
           }
 
-          // d. Calculate the new order safely
-          let newOrder = updateTaskDto.order;
-          if (newOrder === undefined) {
+          if (updateTaskDto.order === undefined) {
             const lastTask = await transactionalManager.findOne(Task, {
               where: { columnId: updateTaskDto.columnId },
               order: { order: 'DESC' },
             });
-            newOrder = lastTask ? lastTask.order + 1 : 0;
+            updateTaskDto.order = lastTask ? lastTask.order + 1 : 0;
           }
 
-          // e. Merge and save into the FRESH locked task, not the stale outer one
           const taskRepo = transactionalManager.getRepository(Task);
-          const updatedTask = taskRepo.merge(lockedTask, {
-            ...updateTaskDto,
-            order: newOrder,
-          });
-
+          const updatedTask = taskRepo.merge(lockedTask, updateTaskDto);
           return await taskRepo.save(updatedTask);
         },
       );
     }
 
-    // 3. Standard update (Title changes, description changes, etc. within the same column)
     const updatedTask = this.tasksRepository.merge(task, updateTaskDto);
     return await this.tasksRepository.save(updatedTask);
   }
