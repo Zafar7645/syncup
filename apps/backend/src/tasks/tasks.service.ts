@@ -109,20 +109,52 @@ export class TasksService {
   }
 
   async update(id: number, updateTaskDto: UpdateTaskDto, userId: number) {
+    // Quick initial check to ensure the user owns the task before doing anything else
     const task = await this.verifyTaskAccess(id, userId);
 
-    if (updateTaskDto.columnId && updateTaskDto.columnId !== task.columnId) {
-      await this.verifyColumnAccess(updateTaskDto.columnId, userId);
+    // If the task is being moved to a DIFFERENT column...
+    if (
+      updateTaskDto.columnId !== undefined &&
+      updateTaskDto.columnId !== task.columnId
+    ) {
+      return await this.tasksRepository.manager.transaction(
+        async (transactionalManager) => {
+          // 1. Fetch, join, and lock the TARGET column
+          const targetColumn = await transactionalManager
+            .createQueryBuilder(BoardColumn, 'column')
+            .leftJoinAndSelect('column.project', 'project')
+            .where('column.id = :id', { id: updateTaskDto.columnId })
+            .setLock('pessimistic_write')
+            .getOne();
 
-      if (updateTaskDto.order === undefined) {
-        const lastTask = await this.tasksRepository.findOne({
-          where: { columnId: updateTaskDto.columnId },
-          order: { order: 'DESC' },
-        });
-        updateTaskDto.order = lastTask ? lastTask.order + 1 : 0;
-      }
+          // 2. Validate target column access (Inside the transaction lock)
+          if (!targetColumn) {
+            throw new NotFoundException('Target column not found');
+          }
+          if (targetColumn.project.userId !== userId) {
+            throw new ForbiddenException(
+              'You do not have permission to move tasks to this board',
+            );
+          }
+
+          // 3. Calculate the new order safely
+          if (updateTaskDto.order === undefined) {
+            const lastTask = await transactionalManager.findOne(Task, {
+              where: { columnId: updateTaskDto.columnId },
+              order: { order: 'DESC' },
+            });
+            updateTaskDto.order = lastTask ? lastTask.order + 1 : 0;
+          }
+
+          // 4. Merge and save the task inside the transaction scope
+          const taskRepo = transactionalManager.getRepository(Task);
+          const updatedTask = taskRepo.merge(task, updateTaskDto);
+          return await taskRepo.save(updatedTask);
+        },
+      );
     }
 
+    // Standard update (Title changes, description changes, etc. within the same column)
     const updatedTask = this.tasksRepository.merge(task, updateTaskDto);
     return await this.tasksRepository.save(updatedTask);
   }
