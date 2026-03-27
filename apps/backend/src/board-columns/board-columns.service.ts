@@ -51,15 +51,22 @@ export class BoardColumnsService {
   }
 
   async create(createDto: CreateBoardColumnDto, userId: number) {
-    await this.verifyProjectAccess(createDto.projectId, userId);
-
     return await this.columnsRepository.manager.transaction(
       async (transactionalManager) => {
-        await transactionalManager
+        const project = await transactionalManager
           .createQueryBuilder(Project, 'project')
           .where('project.id = :id', { id: createDto.projectId })
           .setLock('pessimistic_write')
           .getOne();
+
+        if (!project) {
+          throw new NotFoundException('Project not found');
+        }
+        if (project.userId !== userId) {
+          throw new ForbiddenException(
+            'You do not have permission to modify this project board',
+          );
+        }
 
         let order = createDto.order;
         if (order === undefined) {
@@ -93,6 +100,9 @@ export class BoardColumnsService {
 
   async update(id: number, updateDto: UpdateBoardColumnDto, userId: number) {
     const column = await this.verifyColumnAccess(id, userId);
+    if ('projectId' in updateDto) {
+      delete updateDto.projectId;
+    }
     const updatedColumn = this.columnsRepository.merge(column, updateDto);
     return await this.columnsRepository.save(updatedColumn);
   }

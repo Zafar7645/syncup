@@ -55,15 +55,23 @@ export class TasksService {
   }
 
   async create(createTaskDto: CreateTaskDto, userId: number) {
-    await this.verifyColumnAccess(createTaskDto.columnId, userId);
-
     return await this.columnsRepository.manager.transaction(
       async (transactionalManager) => {
-        await transactionalManager
+        const column = await transactionalManager
           .createQueryBuilder(BoardColumn, 'column')
+          .leftJoinAndSelect('column.project', 'project')
           .where('column.id = :id', { id: createTaskDto.columnId })
           .setLock('pessimistic_write')
           .getOne();
+
+        if (!column) {
+          throw new NotFoundException('Column not found');
+        }
+        if (column.project.userId !== userId) {
+          throw new ForbiddenException(
+            'You do not have permission to add tasks to this board',
+          );
+        }
 
         let order = createTaskDto.order;
         if (order === undefined) {
@@ -88,14 +96,9 @@ export class TasksService {
     await this.verifyColumnAccess(columnId, userId);
     return await this.tasksRepository.find({
       where: {
-        column: {
-          project: {
-            userId: userId,
-          },
-        },
+        columnId: columnId,
       },
       order: {
-        columnId: 'ASC',
         order: 'ASC',
       },
     });
@@ -110,6 +113,14 @@ export class TasksService {
 
     if (updateTaskDto.columnId && updateTaskDto.columnId !== task.columnId) {
       await this.verifyColumnAccess(updateTaskDto.columnId, userId);
+
+      if (updateTaskDto.order === undefined) {
+        const lastTask = await this.tasksRepository.findOne({
+          where: { columnId: updateTaskDto.columnId },
+          order: { order: 'DESC' },
+        });
+        updateTaskDto.order = lastTask ? lastTask.order + 1 : 0;
+      }
     }
 
     const updatedTask = this.tasksRepository.merge(task, updateTaskDto);
