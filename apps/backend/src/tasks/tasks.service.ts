@@ -57,29 +57,52 @@ export class TasksService {
   async create(createTaskDto: CreateTaskDto, userId: number) {
     await this.verifyColumnAccess(createTaskDto.columnId, userId);
 
-    let order = createTaskDto.order;
-    if (order === undefined) {
-      const lastTask = await this.tasksRepository.findOne({
-        where: { columnId: createTaskDto.columnId },
-        order: { order: 'DESC' },
-      });
-      order = lastTask ? lastTask.order + 1 : 0;
-    }
+    return await this.columnsRepository.manager.transaction(
+      async (transactionalManager) => {
+        await transactionalManager
+          .createQueryBuilder(BoardColumn, 'column')
+          .where('column.id = :id', { id: createTaskDto.columnId })
+          .setLock('pessimistic_write')
+          .getOne();
 
-    const task = this.tasksRepository.create({
-      ...createTaskDto,
-      order,
+        let order = createTaskDto.order;
+        if (order === undefined) {
+          const lastTask = await transactionalManager.findOne(Task, {
+            where: { columnId: createTaskDto.columnId },
+            order: { order: 'DESC' },
+          });
+          order = lastTask ? lastTask.order + 1 : 0;
+        }
+
+        const task = transactionalManager.create(Task, {
+          ...createTaskDto,
+          order,
+        });
+
+        return await transactionalManager.save(task);
+      },
+    );
+  }
+
+  async findAll(columnId: number, userId: number) {
+    await this.verifyColumnAccess(columnId, userId);
+    return await this.tasksRepository.find({
+      where: {
+        column: {
+          project: {
+            userId: userId,
+          },
+        },
+      },
+      order: {
+        columnId: 'ASC',
+        order: 'ASC',
+      },
     });
-
-    return await this.tasksRepository.save(task);
   }
 
-  findAll() {
-    return `This action returns all tasks`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
+  async findOne(id: number, userId: number) {
+    return await this.verifyTaskAccess(id, userId);
   }
 
   async update(id: number, updateTaskDto: UpdateTaskDto, userId: number) {

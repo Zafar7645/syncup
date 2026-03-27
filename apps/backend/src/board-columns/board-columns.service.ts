@@ -53,17 +53,30 @@ export class BoardColumnsService {
   async create(createDto: CreateBoardColumnDto, userId: number) {
     await this.verifyProjectAccess(createDto.projectId, userId);
 
-    let order = createDto.order;
-    if (order === undefined) {
-      const lastColumn = await this.columnsRepository.findOne({
-        where: { projectId: createDto.projectId },
-        order: { order: 'DESC' },
-      });
-      order = lastColumn ? lastColumn.order + 1 : 0;
-    }
+    return await this.columnsRepository.manager.transaction(
+      async (transactionalManager) => {
+        await transactionalManager
+          .createQueryBuilder(Project, 'project')
+          .where('project.id = :id', { id: createDto.projectId })
+          .setLock('pessimistic_write')
+          .getOne();
 
-    const column = this.columnsRepository.create({ ...createDto, order });
-    return await this.columnsRepository.save(column);
+        let order = createDto.order;
+        if (order === undefined) {
+          const lastColumn = await transactionalManager.findOne(BoardColumn, {
+            where: { projectId: createDto.projectId },
+            order: { order: 'DESC' },
+          });
+          order = lastColumn ? lastColumn.order + 1 : 0;
+        }
+
+        const column = transactionalManager.create(BoardColumn, {
+          ...createDto,
+          order,
+        });
+        return await transactionalManager.save(column);
+      },
+    );
   }
 
   async findAll(projectId: number, userId: number) {
@@ -74,8 +87,8 @@ export class BoardColumnsService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} boardColumn`;
+  async findOne(id: number, userId: number) {
+    return await this.verifyColumnAccess(id, userId);
   }
 
   async update(id: number, updateDto: UpdateBoardColumnDto, userId: number) {

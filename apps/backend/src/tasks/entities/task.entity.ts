@@ -18,7 +18,7 @@ export class Task {
   title: string;
 
   @Column({ nullable: true })
-  description: string;
+  description: string | null;
 
   @Column()
   order: number;

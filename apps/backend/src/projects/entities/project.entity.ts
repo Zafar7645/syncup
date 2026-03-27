@@ -20,7 +20,7 @@ export class Project {
   name: string;
 
   @Column({ nullable: true })
-  description: string;
+  description: string | null;
 
   @Column({ name: 'user_id' })
   userId: number;

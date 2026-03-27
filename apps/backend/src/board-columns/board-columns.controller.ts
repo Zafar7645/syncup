@@ -41,8 +41,11 @@ export class BoardColumnsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.boardColumnsService.findOne(id);
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @Request() req: { user: { userId: number; email: string } },
+  ) {
+    return this.boardColumnsService.findOne(id, req.user.userId);
   }
 
   @Patch(':id')

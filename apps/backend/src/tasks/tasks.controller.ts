@@ -9,6 +9,7 @@ import {
   Request,
   UseGuards,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { TasksService } from '@/tasks/tasks.service';
 import { CreateTaskDto } from '@/tasks/dto/create-task.dto';
@@ -29,13 +30,19 @@ export class TasksController {
   }
 
   @Get()
-  findAll() {
-    return this.tasksService.findAll();
+  findAll(
+    @Query('columnId', ParseIntPipe) columnId: number,
+    @Request() req: { user: { userId: number; email: string } },
+  ) {
+    return this.tasksService.findAll(columnId, req.user.userId);
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.tasksService.findOne(id);
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @Request() req: { user: { userId: number; email: string } },
+  ) {
+    return this.tasksService.findOne(id, req.user.userId);
   }
 
   @Patch(':id')

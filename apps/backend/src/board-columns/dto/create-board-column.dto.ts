@@ -1,15 +1,15 @@
-import { IsNotEmpty, IsNumber, IsString, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsInt } from 'class-validator';
 
 export class CreateBoardColumnDto {
   @IsString()
   @IsNotEmpty()
   name: string;
 
-  @IsNumber()
+  @IsInt()
   @IsOptional()
   order?: number;
 
-  @IsNumber()
+  @IsInt()
   @IsNotEmpty()
   projectId: number;
 }
