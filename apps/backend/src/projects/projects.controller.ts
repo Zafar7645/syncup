@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Request,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ProjectsService } from '@/projects/projects.service';
 import { CreateProjectDto } from '@/projects/dto/create-project.dto';
@@ -34,26 +35,26 @@ export class ProjectsController {
 
   @Get(':id')
   findOne(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Request() req: { user: { userId: number; email: string } },
   ) {
-    return this.projectsService.findOne(+id, req.user.userId);
+    return this.projectsService.findOne(id, req.user.userId);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateProjectDto: UpdateProjectDto,
     @Request() req: { user: { userId: number; email: string } },
   ) {
-    return this.projectsService.update(+id, updateProjectDto, req.user.userId);
+    return this.projectsService.update(id, updateProjectDto, req.user.userId);
   }
 
   @Delete(':id')
   remove(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Request() req: { user: { userId: number; email: string } },
   ) {
-    return this.projectsService.remove(+id, req.user.userId);
+    return this.projectsService.remove(id, req.user.userId);
   }
 }

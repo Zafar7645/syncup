@@ -1,33 +1,30 @@
 import { BoardColumn } from '@/board-columns/entities/board-column.entity';
-import { User } from '@/users/user.entity';
 import {
   Column,
   CreateDateColumn,
+  UpdateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'projects' })
-export class Project {
+@Entity({ name: 'tasks' })
+export class Task {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string;
+  title: string;
 
   @Column({ nullable: true })
   description: string | null;
 
-  @Column({ name: 'user_id' })
-  userId: number;
+  @Column()
+  order: number;
 
-  @ManyToOne(() => User, (user) => user.projects, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'user_id' })
-  user: User;
+  @Column({ name: 'column_id' })
+  columnId: number;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
@@ -35,6 +32,9 @@ export class Project {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @OneToMany(() => BoardColumn, (boardColumn) => boardColumn.project)
-  boardColumns: BoardColumn[];
+  @ManyToOne(() => BoardColumn, (column) => column.tasks, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'column_id' })
+  column: BoardColumn;
 }
