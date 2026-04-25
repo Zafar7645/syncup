@@ -90,7 +90,8 @@ export class BoardColumnsService {
     await this.verifyProjectAccess(projectId, userId);
     return await this.columnsRepository.find({
       where: { projectId },
-      order: { order: 'ASC' },
+      relations: { tasks: true },
+      order: { order: 'ASC', tasks: { order: 'ASC' } },
     });
   }
 
