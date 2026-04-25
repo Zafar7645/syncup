@@ -1,35 +1,105 @@
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-  <label for="name">Name</label>
-  <input id="name" type="text" formControlName="name" />
-  @if (name?.invalid && (name?.touched || name?.dirty)) {
-    <small>Name is required.</small>
-  }
+<div class="auth-page">
+  <div class="auth-card card">
+    <div class="auth-logo">
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 28 28"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <path
+          d="M14 4C8.477 4 4 8.477 4 14s4.477 10 10 10 10-4.477 10-10S19.523 4 14 4z"
+          fill="var(--color-accent-bg)"
+          stroke="var(--color-accent)"
+          stroke-width="1.5"
+        />
+        <path
+          d="M10 14l3 3 5-5"
+          stroke="var(--color-accent)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      <span class="auth-logo-text">SyncUp</span>
+    </div>
 
-  <label for="email">Email</label>
-  <input id="email" type="email" formControlName="email" />
-  @if (email?.invalid && (email?.touched || email?.dirty)) {
-    @if (email?.errors?.['required']) {
-      <small>Email is required.</small>
-    }
-    @if (email?.errors?.['pattern']) {
-      <small>Please enter a valid email address. (e.g. user&#64;domain.com)</small>
-    }
-  }
+    <h1 class="auth-heading">Create your account</h1>
+    <p class="auth-subheading">Start managing your projects in minutes.</p>
 
-  <label for="password">Password</label>
-  <input id="password" type="password" formControlName="password" />
-  @if (password?.invalid && (password?.touched || password?.dirty)) {
-    @if (password?.errors?.['required']) {
-      <small>Password is required.</small>
-    }
-    @if (password?.errors?.['pattern']) {
-      <small>{{ passwordValidationMessage }}</small>
-    }
-  }
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="name">Name</label>
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          class="form-input"
+          [class.error]="name?.invalid && (name?.dirty || name?.touched)"
+          placeholder="Jane Smith"
+          autocomplete="name"
+        />
+        @if (name?.invalid && (name?.touched || name?.dirty)) {
+          <span class="form-error">Name is required.</span>
+        }
+      </div>
 
-  <button id="submit" type="submit" [disabled]="!registerForm.valid">Create Account</button>
+      <div class="form-group">
+        <label class="form-label" for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          class="form-input"
+          [class.error]="email?.invalid && (email?.dirty || email?.touched)"
+          placeholder="you@example.com"
+          autocomplete="email"
+        />
+        @if (email?.invalid && (email?.touched || email?.dirty)) {
+          @if (email?.errors?.['required']) {
+            <span class="form-error">Email is required.</span>
+          }
+          @if (email?.errors?.['pattern']) {
+            <span class="form-error">Please enter a valid email address.</span>
+          }
+        }
+      </div>
 
-  @if (errorMessage) {
-    <div>{{ errorMessage }}</div>
-  }
-</form>
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          class="form-input"
+          [class.error]="password?.invalid && (password?.dirty || password?.touched)"
+          placeholder="••••••••"
+          autocomplete="new-password"
+        />
+        @if (password?.invalid && (password?.touched || password?.dirty)) {
+          @if (password?.errors?.['required']) {
+            <span class="form-error">Password is required.</span>
+          }
+          @if (password?.errors?.['pattern']) {
+            <span class="form-error">{{ passwordValidationMessage }}</span>
+          }
+        }
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert alert-error">{{ errorMessage }}</div>
+      }
+
+      <button type="submit" class="btn btn-primary auth-submit" [disabled]="registerForm.invalid">
+        Create Account
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      Already have an account?
+      <a routerLink="/auth/login" class="auth-link">Sign in</a>
+    </p>
+  </div>
+</div>

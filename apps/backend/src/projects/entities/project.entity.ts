@@ -19,7 +19,7 @@ export class Project {
   @Column()
   name: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   description: string | null;
 
   @Column({ name: 'user_id' })

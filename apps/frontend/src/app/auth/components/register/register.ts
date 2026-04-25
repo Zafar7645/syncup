@@ -8,11 +8,11 @@ import {
 import { EMAIL_REGEX_STRING } from '@shared/validation/email.constants';
 import { Auth } from '@/app/auth/services/auth';
 import { RegisterUserDto } from '@shared/dtos/auth/register-user.dto';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })

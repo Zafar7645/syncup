@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '@/environments/environment.development';
+import { environment } from '@/environments/environment';
 import { RegisterUserDto } from '@shared/dtos/auth/register-user.dto';
 import { UserResponseDto } from '@shared/dtos/user/user-response.dto';
 import { LoginUserDto } from '@shared/dtos/auth/login-user.dto';
@@ -37,6 +37,17 @@ export class Auth {
 
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
+  }
+
+  getUserEmail(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.email ?? null;
+    } catch {
+      return null;
+    }
   }
 
   private setSession(authResult: UserResponseDto | AccessTokenDto) {
