@@ -1,0 +1,72 @@
+<div class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">{{ isEditMode ? 'Edit Project' : 'New Project' }}</h2>
+      <button class="btn-icon" (click)="onCancel()" aria-label="Close">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="proj-name">Name <span class="required">*</span></label>
+          <input
+            id="proj-name"
+            type="text"
+            formControlName="name"
+            class="form-input"
+            [class.error]="name?.invalid && name?.touched"
+            placeholder="e.g. Website Redesign"
+            autocomplete="off"
+          />
+          @if (name?.invalid && name?.touched) {
+            @if (name?.errors?.['required']) {
+              <span class="form-error">Project name is required.</span>
+            }
+            @if (name?.errors?.['maxlength']) {
+              <span class="form-error">Name must be 100 characters or fewer.</span>
+            }
+          }
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="proj-desc">Description</label>
+          <textarea
+            id="proj-desc"
+            formControlName="description"
+            class="form-textarea"
+            [class.error]="description?.invalid && description?.touched"
+            placeholder="What is this project about?"
+            rows="3"
+          ></textarea>
+          @if (description?.errors?.['maxlength'] && description?.touched) {
+            <span class="form-error">Description must be 500 characters or fewer.</span>
+          }
+        </div>
+
+        @if (errorMessage) {
+          <div class="alert alert-error">{{ errorMessage }}</div>
+        }
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" (click)="onCancel()">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid || submitting">
+          {{ submitting ? 'Saving…' : isEditMode ? 'Save Changes' : 'Create Project' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

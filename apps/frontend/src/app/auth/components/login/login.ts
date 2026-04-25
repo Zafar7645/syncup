@@ -8,11 +8,11 @@ import {
 import { EMAIL_REGEX_STRING } from '@shared/validation/email.constants';
 import { LoginUserDto } from '@shared/dtos/auth/login-user.dto';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })

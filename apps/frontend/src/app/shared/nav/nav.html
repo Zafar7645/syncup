@@ -1,0 +1,47 @@
+<header class="nav">
+  <div class="nav-brand" routerLink="/dashboard">
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 28 28"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M14 4C8.477 4 4 8.477 4 14s4.477 10 10 10 10-4.477 10-10S19.523 4 14 4z"
+        fill="var(--color-accent-bg)"
+        stroke="var(--color-accent)"
+        stroke-width="1.5"
+      />
+      <path
+        d="M10 14l3 3 5-5"
+        stroke="var(--color-accent)"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+    <span class="nav-brand-text">SyncUp</span>
+  </div>
+
+  @if (title) {
+    <div class="nav-breadcrumb">
+      <span class="nav-breadcrumb-sep">/</span>
+      <span class="nav-breadcrumb-title">{{ title }}</span>
+    </div>
+  }
+
+  <div class="nav-actions">
+    <div class="nav-avatar-wrapper">
+      <button class="nav-avatar" (click)="toggleMenu()" aria-label="User menu">
+        <span>{{ userInitial }}</span>
+      </button>
+      @if (menuOpen) {
+        <div class="nav-menu">
+          <button class="nav-menu-item danger" (click)="logout()">Sign out</button>
+        </div>
+      }
+    </div>
+  </div>
+</header>
