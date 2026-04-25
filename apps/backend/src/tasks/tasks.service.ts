@@ -59,7 +59,7 @@ export class TasksService {
       async (transactionalManager) => {
         const column = await transactionalManager
           .createQueryBuilder(BoardColumn, 'column')
-          .leftJoinAndSelect('column.project', 'project')
+          .innerJoinAndSelect('column.project', 'project')
           .where('column.id = :id', { id: createTaskDto.columnId })
           .setLock('pessimistic_write')
           .getOne();
@@ -134,7 +134,7 @@ export class TasksService {
 
           const targetColumn = await transactionalManager
             .createQueryBuilder(BoardColumn, 'column')
-            .leftJoinAndSelect('column.project', 'project')
+            .innerJoinAndSelect('column.project', 'project')
             .where('column.id = :id', { id: updateTaskDto.columnId })
             .setLock('pessimistic_write')
             .getOne();

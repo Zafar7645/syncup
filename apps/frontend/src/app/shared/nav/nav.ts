@@ -16,10 +16,11 @@ export class Nav {
   private elementRef = inject(ElementRef);
 
   menuOpen = false;
+  readonly userInitial: string;
 
-  get userInitial(): string {
+  constructor() {
     const email = this.authService.getUserEmail();
-    return email ? email[0].toUpperCase() : '?';
+    this.userInitial = email ? email[0].toUpperCase() : '?';
   }
 
   @HostListener('document:click', ['$event'])
