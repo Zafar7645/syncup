@@ -18,17 +18,22 @@ export class ProjectsService {
   ) {}
 
   async create(createProjectDto: CreateProjectDto, userId: number) {
-    return await this.projectsRepository.manager.transaction(async (manager) => {
-      const project = manager.create(Project, { ...createProjectDto, userId });
-      await manager.save(project);
+    return await this.projectsRepository.manager.transaction(
+      async (manager) => {
+        const project = manager.create(Project, {
+          ...createProjectDto,
+          userId,
+        });
+        await manager.save(project);
 
-      const columns = DEFAULT_COLUMNS.map((name, order) =>
-        manager.create(BoardColumn, { name, order, projectId: project.id }),
-      );
-      await manager.save(columns);
+        const columns = DEFAULT_COLUMNS.map((name, order) =>
+          manager.create(BoardColumn, { name, order, projectId: project.id }),
+        );
+        await manager.save(columns);
 
-      return project;
-    });
+        return project;
+      },
+    );
   }
 
   async findAll(userId: number) {
@@ -54,7 +59,10 @@ export class ProjectsService {
 
   async update(id: number, updateProjectDto: UpdateProjectDto, userId: number) {
     const project = await this.findOne(id, userId);
-    const updatedProject = this.projectsRepository.merge(project, updateProjectDto);
+    const updatedProject = this.projectsRepository.merge(
+      project,
+      updateProjectDto,
+    );
     return await this.projectsRepository.save(updatedProject);
   }
 

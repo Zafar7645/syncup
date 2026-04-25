@@ -18,7 +18,6 @@
                 (keydown.enter)="confirmRenameColumn(col)"
                 (keydown.escape)="cancelRenameColumn()"
                 (blur)="confirmRenameColumn(col)"
-                autofocus
               />
             } @else {
               <span class="column-name">{{ col.name }}</span>
@@ -94,7 +93,6 @@
                   rows="2"
                   (keydown.enter)="$event.preventDefault(); confirmAddTask(col)"
                   (keydown.escape)="cancelAddTask()"
-                  autofocus
                 ></textarea>
                 <div class="add-task-form-actions">
                   <button class="btn btn-primary" style="font-size:12px;padding:6px 12px" (click)="confirmAddTask(col)">Add</button>
@@ -124,7 +122,6 @@
               placeholder="Column name…"
               (keydown.enter)="confirmAddColumn()"
               (keydown.escape)="addingColumn = false"
-              autofocus
             />
             <div class="add-column-form-actions">
               <button class="btn btn-primary" style="font-size:12px;padding:6px 12px" (click)="confirmAddColumn()">Add</button>
