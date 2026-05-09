@@ -1,3 +1,9 @@
+/**
+ * @file auth.controller.ts
+ * @description HTTP controller for authentication routes (/auth).
+ * Exposes public endpoints for registration and login, and a protected
+ * endpoint that returns the authenticated user's identity from the JWT payload.
+ */
 import {
   Body,
   Controller,

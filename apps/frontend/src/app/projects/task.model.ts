@@ -1,3 +1,9 @@
+/**
+ * @file task.model.ts
+ * @description TypeScript interfaces for the Task resource and its request DTOs.
+ * Used by TaskService and KanbanComponent. The columnId field is used to move
+ * tasks between columns via PATCH /tasks/:id.
+ */
 export interface Task {
   id: number;
   title: string;

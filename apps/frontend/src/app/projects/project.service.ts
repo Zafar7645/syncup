@@ -1,3 +1,9 @@
+/**
+ * @file project.service.ts
+ * @description HTTP service for project CRUD operations. All requests are authenticated
+ * automatically by the TokenInterceptor. The base URL comes from the environment
+ * configuration so no URL is hardcoded.
+ */
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';

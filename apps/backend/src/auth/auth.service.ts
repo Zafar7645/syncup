@@ -1,3 +1,10 @@
+/**
+ * @file auth.service.ts
+ * @description Core authentication logic. Handles user registration (with bcrypt
+ * password hashing and transaction-based rollback on duplicate email) and login
+ * (credential verification and JWT issuance). All sensitive operations are
+ * contained here so controllers remain thin.
+ */
 import {
   ConflictException,
   Injectable,
@@ -22,6 +29,15 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
+  /**
+   * Registers a new user and returns their profile with an access token.
+   * Hashes the password with bcrypt before persisting. Wraps the insert in a
+   * transaction so it rolls back cleanly on a duplicate-email constraint violation.
+   *
+   * @param registerUserDto - Validated registration payload (name, email, password)
+   * @returns User profile and signed JWT access token
+   * @throws ConflictException if the email is already registered (PG error 23505)
+   */
   async register(registerUserDto: RegisterUserDto): Promise<UserResponseDto> {
     const { name, email, password } = registerUserDto;
     const raw = this.configService.get<string>('BCRYPT_SALT_ROUNDS');
@@ -80,6 +96,14 @@ export class AuthService {
     }
   }
 
+  /**
+   * Authenticates a user by email and password.
+   * Normalises the email to lowercase before lookup. Returns a signed JWT on success.
+   *
+   * @param loginUserDto - Login payload (email, password)
+   * @returns Signed JWT access token
+   * @throws UnauthorizedException if the email is not found or the password does not match
+   */
   async login(loginUserDto: LoginUserDto): Promise<AccessTokenDto> {
     const lowerCaseEmail = loginUserDto.email.toLowerCase().trim();
     const user = await this.usersService.findOneByEmail(lowerCaseEmail);

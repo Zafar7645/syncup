@@ -1,3 +1,9 @@
+/**
+ * @file main.ts
+ * @description Application entry point. Bootstraps the NestJS app, registers the global
+ * ValidationPipe (strips unknown fields, enforces DTO rules), configures CORS from
+ * environment variables, and starts the HTTP server.
+ */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@/app.module';
 import { ValidationPipe } from '@nestjs/common';

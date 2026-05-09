@@ -1,3 +1,9 @@
+/**
+ * @file register-user.dto.ts
+ * @description Shared DTO for registration requests. The password field is validated
+ * against the shared PASSWORD_REGEX_STRING from libs/shared-validation, ensuring the
+ * same rules apply on both the backend (class-validator) and frontend (Reactive Forms).
+ */
 import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
 import {
   PASSWORD_REGEX_STRING,

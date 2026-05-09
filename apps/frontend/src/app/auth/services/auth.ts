@@ -1,3 +1,10 @@
+/**
+ * @file auth.ts
+ * @description Authentication service for the Angular frontend. Manages the JWT
+ * lifecycle: stores the token in localStorage on login/register, exposes it for
+ * the token interceptor, provides isAuthenticated() for the route guard, and
+ * decodes the payload to derive the user's email initial for the nav avatar.
+ */
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@/environments/environment';

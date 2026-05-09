@@ -1,3 +1,10 @@
+/**
+ * @file app.config.ts
+ * @description Root application configuration. Registers global providers:
+ * - provideRouter: wires up the route definitions from app.routes.ts
+ * - provideHttpClient: enables Angular's HttpClient with the token interceptor
+ * - provideAnimationsAsync: required by Angular CDK drag-and-drop
+ */
 import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,

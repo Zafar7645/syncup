@@ -1,3 +1,9 @@
+/**
+ * @file board-column.model.ts
+ * @description TypeScript interfaces for the BoardColumn resource and its request DTOs.
+ * The BoardColumn interface includes a nested tasks array because the API returns
+ * columns with their tasks embedded (GET /board-columns?projectId=X).
+ */
 import { Task } from './task.model';
 
 export interface BoardColumn {

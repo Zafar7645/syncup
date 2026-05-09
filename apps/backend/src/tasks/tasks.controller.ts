@@ -1,3 +1,9 @@
+/**
+ * @file tasks.controller.ts
+ * @description HTTP controller for task routes (/tasks). All routes require JWT
+ * authentication. The GET list route accepts a required `columnId` query parameter.
+ * Moving a task between columns is handled by PATCH with an updated columnId.
+ */
 import {
   Controller,
   Get,

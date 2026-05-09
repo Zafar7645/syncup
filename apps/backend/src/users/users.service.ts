@@ -1,3 +1,9 @@
+/**
+ * @file users.service.ts
+ * @description Data-access service for the User entity. Provides a single query method
+ * used by AuthService during login. The password field is explicitly selected here
+ * because it is excluded from default queries by the entity definition.
+ */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@/users/user.entity';
