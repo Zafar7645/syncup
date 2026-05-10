@@ -11,6 +11,16 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 > Changes on `main` not yet tagged as a release.
 
+### Added
+
+**Tests**
+- Backend: 102 Jest unit tests across all modules — `auth`, `users`, `projects`, `board-columns`, `tasks` — covering services and controllers
+- Frontend: 126 Karma + Jasmine unit tests covering all components (`Login`, `Register`, `Nav`, `ProjectForm`, `Dashboard`, `Kanban`), all services (`Auth`, `ProjectService`, `BoardColumnService`, `TaskService`), `AuthGuard`, and `TokenInterceptor`
+
+### Fixed
+
+- `tsconfig.json` (`backend` and `frontend`): removed deprecated `baseUrl`, added explicit `rootDir`, dropped `../../libs/**/*` from backend `include` — fixes TypeScript language server errors in editors
+
 ---
 
 ## [1.0.0] - 2026-04-26

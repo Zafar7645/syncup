@@ -13,9 +13,9 @@
     "target": "ES2023",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    "rootDir": "../../",
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["./src/*"],
       "@shared/validation/*": ["../../libs/shared-validation/src/*"],
       "@shared/dtos/*": ["../../libs/shared-dtos/src/*"]
     },
@@ -29,5 +29,5 @@
     "noFallthroughCasesInSwitch": false,
     "useUnknownInCatchVariables": true
   },
-  "include": ["src/**/*", "test/**/*", "../../libs/**/*"]
+  "include": ["src/**/*", "test/**/*"]
 }

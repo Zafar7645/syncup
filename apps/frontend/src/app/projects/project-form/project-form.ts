@@ -69,8 +69,9 @@ export class ProjectForm implements OnChanges {
 
     const { name, description } = this.form.value;
 
+    // || is intentional: '' (cleared field) must be omitted from the DTO, not sent as an empty string
     if (this.project) {
-      const dto: UpdateProjectDto = { name: name!, description: description ?? undefined };
+      const dto: UpdateProjectDto = { name: name!, description: description || undefined };
       this.projectService.updateProject(this.project.id, dto).subscribe({
         next: (updated) => {
           this.submitting = false;
@@ -82,7 +83,7 @@ export class ProjectForm implements OnChanges {
         },
       });
     } else {
-      const dto: CreateProjectDto = { name: name!, description: description ?? undefined };
+      const dto: CreateProjectDto = { name: name!, description: description || undefined };
       this.projectService.createProject(dto).subscribe({
         next: (created) => {
           this.submitting = false;
