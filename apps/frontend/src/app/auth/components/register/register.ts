@@ -1,3 +1,9 @@
+/**
+ * @file register.ts
+ * @description Standalone component for the registration page (/auth/register). Uses a
+ * Reactive Form with name, email, and password fields. Password validation uses the
+ * shared PASSWORD_REGEX_STRING constant. On success, navigates to /dashboard.
+ */
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';

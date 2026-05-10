@@ -1,3 +1,9 @@
+/**
+ * @file task.service.ts
+ * @description HTTP service for task CRUD and movement operations. updateTask() is
+ * called by the Kanban component on every drag-drop event to persist the task's
+ * new columnId and order to the backend.
+ */
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';

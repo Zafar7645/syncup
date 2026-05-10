@@ -1,3 +1,9 @@
+/**
+ * @file projects.controller.ts
+ * @description HTTP controller for project routes (/projects). All routes are protected
+ * by JwtAuthGuard. The authenticated user's ID is extracted from req.user and passed
+ * to the service so ownership is enforced at the data layer.
+ */
 import {
   Controller,
   Get,

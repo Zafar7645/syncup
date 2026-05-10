@@ -1,3 +1,11 @@
+/**
+ * @file board-columns.service.ts
+ * @description Business logic for Kanban board column management. Every operation
+ * verifies that the requesting user owns the parent project before proceeding.
+ * Column creation uses a pessimistic write lock to safely auto-assign order values
+ * under concurrent requests. The findAll method eagerly loads tasks so the entire
+ * board state is returned in a single query.
+ */
 import {
   ForbiddenException,
   Injectable,

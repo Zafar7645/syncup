@@ -1,3 +1,10 @@
+/**
+ * @file project.entity.ts
+ * @description TypeORM entity for the 'projects' table. Each project belongs to one
+ * user and has many board columns. Deleting a project cascades to its columns (which
+ * in turn cascade to tasks). The description column explicitly declares type: 'varchar'
+ * to avoid TypeORM's union-type reflection bug with nullable strings.
+ */
 import { BoardColumn } from '@/board-columns/entities/board-column.entity';
 import { User } from '@/users/user.entity';
 import {

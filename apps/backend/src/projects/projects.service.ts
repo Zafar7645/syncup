@@ -1,3 +1,10 @@
+/**
+ * @file projects.service.ts
+ * @description Business logic for project management. On creation, wraps the project
+ * insert and default column seeding in a single transaction so the board is always
+ * in a consistent state. All read/write operations verify user ownership before
+ * touching the database.
+ */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProjectDto } from '@/projects/dto/create-project.dto';
 import { UpdateProjectDto } from '@/projects/dto/update-project.dto';

@@ -1,3 +1,9 @@
+/**
+ * @file dashboard.ts
+ * @description Main page component for authenticated users (/dashboard). Displays the
+ * user's project grid (or an empty state) and orchestrates the create/edit project
+ * modal. Clicking a project card navigates to the Kanban board for that project.
+ */
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';

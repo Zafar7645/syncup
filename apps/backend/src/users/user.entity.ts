@@ -1,3 +1,10 @@
+/**
+ * @file user.entity.ts
+ * @description TypeORM entity for the 'users' table. The password column is excluded
+ * from default SELECT queries (select: false) and must be explicitly requested.
+ * A lifecycle hook normalises the email to lowercase and trimmed before every
+ * insert or update to ensure consistent lookups.
+ */
 import { Project } from '@/projects/entities/project.entity';
 import {
   BeforeInsert,

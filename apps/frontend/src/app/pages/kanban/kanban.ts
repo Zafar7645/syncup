@@ -1,3 +1,11 @@
+/**
+ * @file kanban.ts
+ * @description Full Kanban board component for a specific project (/projects/:id).
+ * Loads columns and their tasks in one API call. Manages all CRUD operations for
+ * columns and tasks inline (no child components) and integrates Angular CDK
+ * drag-and-drop for moving tasks within and between columns. On drop, persists
+ * the change via PATCH /tasks/:id and rolls back the UI on error.
+ */
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';

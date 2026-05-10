@@ -1,3 +1,10 @@
+/**
+ * @file board-columns.controller.ts
+ * @description HTTP controller for board column routes (/board-columns). All routes
+ * require JWT authentication. The GET list route accepts a required `projectId` query
+ * parameter and returns columns with their tasks already embedded, enabling the
+ * Kanban board to load in a single HTTP request.
+ */
 import {
   Controller,
   Get,

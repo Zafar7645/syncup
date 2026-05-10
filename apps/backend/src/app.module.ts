@@ -1,3 +1,9 @@
+/**
+ * @file app.module.ts
+ * @description Root NestJS module. Wires together global configuration (ConfigModule),
+ * the PostgreSQL connection (TypeOrmModule), and all feature modules.
+ * TypeORM schema auto-sync is enabled in development and disabled in production.
+ */
 import { Module } from '@nestjs/common';
 import { AppController } from '@/app.controller';
 import { AppService } from '@/app.service';

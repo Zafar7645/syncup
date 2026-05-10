@@ -1,3 +1,9 @@
+/**
+ * @file auth.module.ts
+ * @description Feature module for authentication. Imports PassportModule and configures
+ * JwtModule asynchronously from environment variables (JWT_SECRET, 60-minute expiry).
+ * Registers JwtStrategy as a provider so Passport can use it globally.
+ */
 import { Module } from '@nestjs/common';
 import { AuthController } from '@/auth/auth.controller';
 import { AuthService } from '@/auth/auth.service';

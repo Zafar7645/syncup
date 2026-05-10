@@ -1,3 +1,11 @@
+/**
+ * @file tasks.service.ts
+ * @description Business logic for task management. Ownership is verified by traversing
+ * task → column → project → userId on every operation. Cross-column moves use a
+ * transaction with pessimistic write locks on both source and target columns to prevent
+ * order conflicts under concurrent requests. innerJoinAndSelect is used (not left join)
+ * because PostgreSQL disallows FOR UPDATE on the nullable side of an outer join.
+ */
 import {
   Injectable,
   NotFoundException,

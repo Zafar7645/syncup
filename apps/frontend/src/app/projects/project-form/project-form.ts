@@ -1,3 +1,11 @@
+/**
+ * @file project-form.ts
+ * @description Standalone modal component for creating and editing projects.
+ * Operates in create mode when no project input is provided, and edit mode
+ * when an existing project is passed. Emits 'saved' with the result on success
+ * and 'cancelled' when the user dismisses without saving.
+ * Escape key is handled via @HostListener so the modal closes keyboard-accessibly.
+ */
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, HostListener, inject, Input, OnChanges, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';

@@ -1,3 +1,10 @@
+/**
+ * @file task.entity.ts
+ * @description TypeORM entity for the 'tasks' table. Tasks belong to a board column
+ * and are ordered within it by the `order` field. Deleting a column cascades to its
+ * tasks. The description column explicitly declares type: 'varchar' to avoid TypeORM's
+ * union-type reflection issue with nullable string columns in PostgreSQL.
+ */
 import { BoardColumn } from '@/board-columns/entities/board-column.entity';
 import {
   Column,

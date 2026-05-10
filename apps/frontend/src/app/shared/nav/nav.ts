@@ -1,3 +1,10 @@
+/**
+ * @file nav.ts
+ * @description Shared top navigation bar component. Displays the SyncUp logo,
+ * an optional breadcrumb title, and a user avatar menu with sign-out action.
+ * The avatar initial is derived from the JWT payload via AuthService.
+ * Clicking outside the open menu closes it via a document-level click listener.
+ */
 import { Component, ElementRef, HostListener, inject, Input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '@/app/auth/services/auth';

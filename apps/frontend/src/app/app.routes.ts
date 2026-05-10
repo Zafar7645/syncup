@@ -1,3 +1,11 @@
+/**
+ * @file app.routes.ts
+ * @description Top-level route definitions for the SyncUp SPA.
+ * - /auth (lazy): Login and register pages loaded on demand.
+ * - /dashboard (guarded): Project list for the authenticated user.
+ * - /projects/:id (guarded): Kanban board for a specific project.
+ * - / redirects to /dashboard.
+ */
 import { Routes } from '@angular/router';
 import { Dashboard } from '@/app/pages/dashboard/dashboard';
 import { Kanban } from '@/app/pages/kanban/kanban';

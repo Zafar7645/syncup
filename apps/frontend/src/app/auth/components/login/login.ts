@@ -1,3 +1,9 @@
+/**
+ * @file login.ts
+ * @description Standalone component for the login page (/auth/login). Uses a Reactive
+ * Form with email and password fields validated against the shared regex constants.
+ * On success, navigates to /dashboard. Displays API error messages inline.
+ */
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Auth } from '@/app/auth/services/auth';

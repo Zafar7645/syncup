@@ -1,3 +1,9 @@
+/**
+ * @file board-column.service.ts
+ * @description HTTP service for board column CRUD operations. getColumns() returns
+ * columns with their tasks already embedded, enabling the Kanban board to render
+ * without additional requests.
+ */
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';

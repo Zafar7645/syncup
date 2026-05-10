@@ -1,3 +1,8 @@
+/**
+ * @file project.model.ts
+ * @description TypeScript interfaces for the Project resource and its request DTOs.
+ * Used by ProjectService, DashboardComponent, and ProjectFormComponent.
+ */
 export interface Project {
   id: number;
   name: string;
