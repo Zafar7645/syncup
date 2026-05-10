@@ -104,6 +104,25 @@ npm run start:frontend
 # App running at http://localhost:4200
 ```
 
+## 🧪 Running Tests
+
+```bash
+# Backend — Jest unit tests (102 tests)
+cd apps/backend && npm test
+
+# Backend — watch mode
+cd apps/backend && npm run test:watch
+
+# Backend — coverage report
+cd apps/backend && npm run test:cov
+
+# Frontend — Karma + Jasmine (126 tests)
+cd apps/frontend && ng test
+
+# Frontend — single run (CI)
+cd apps/frontend && ng test --watch=false --browsers=ChromeHeadless
+```
+
 ## 🔧 Environment Variables
 
 Create `apps/backend/.env` with the following variables:

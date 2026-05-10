@@ -14,9 +14,9 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "preserve",
-    "baseUrl": "./",
+    "rootDir": "../../",
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["./src/*"],
       "@shared/validation/*": ["../../libs/shared-validation/src/*"],
       "@shared/dtos/*": ["../../libs/shared-dtos/src/*"]
     }
