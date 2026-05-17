@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="36" height="36" role="img" aria-label="SyncUp icon">
+  <title>SyncUp</title>
+  <defs>
+    <linearGradient id="bar-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8ACBD0"/>
+      <stop offset="100%" stop-color="#56B6C6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Kanban column bars — light teal to medium teal (visible on both cream and indigo) -->
+  <rect x="0"  y="14" width="9" height="22" rx="3.5" fill="url(#bar-grad)"/>
+  <rect x="13" y="5"  width="9" height="31" rx="3.5" fill="url(#bar-grad)"/>
+  <rect x="26" y="20" width="9" height="16" rx="3.5" fill="url(#bar-grad)"/>
+
+  <!-- Task card indicators -->
+  <rect x="2"  y="17" width="5" height="2.5" rx="1" fill="white" fill-opacity="0.55"/>
+  <rect x="2"  y="22" width="5" height="2.5" rx="1" fill="white" fill-opacity="0.55"/>
+  <rect x="15" y="8"  width="5" height="2.5" rx="1" fill="white" fill-opacity="0.55"/>
+  <rect x="15" y="14" width="5" height="2.5" rx="1" fill="white" fill-opacity="0.55"/>
+  <rect x="15" y="20" width="5" height="2.5" rx="1" fill="white" fill-opacity="0.55"/>
+  <rect x="28" y="23" width="5" height="2.5" rx="1" fill="white" fill-opacity="0.55"/>
+</svg>
