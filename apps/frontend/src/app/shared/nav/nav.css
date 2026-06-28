@@ -1,55 +1,66 @@
+/* ── Nav shell — deep indigo background ───────────────────── */
 .nav {
-  height: 56px;
+  height: 64px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 0 24px;
-  background-color: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
+  gap: 16px;
+  padding: 0 28px;
+  background-color: #170C79;
+  box-shadow: 0 4px 20px rgba(23, 12, 121, 0.35);
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: var(--z-sticky);
 }
 
+/* ── Brand ────────────────────────────────────────────────── */
 .nav-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   cursor: pointer;
   text-decoration: none;
   flex-shrink: 0;
 }
 
 .nav-brand-text {
-  font-size: var(--text-base);
-  font-weight: 700;
-  color: var(--color-accent);
-  letter-spacing: -0.3px;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: #EFE3CA;
+  letter-spacing: var(--tracking-tight);
 }
 
+/* "Up" in light teal — visible on indigo */
+.nav-brand-accent {
+  color: #8ACBD0;
+}
+
+/* ── Breadcrumb ───────────────────────────────────────────── */
 .nav-breadcrumb {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .nav-breadcrumb-sep {
-  color: var(--color-border);
-  font-size: var(--text-lg);
+  color: rgba(239, 227, 202, 0.35);
+  font-size: var(--text-xl);
   font-weight: 300;
   line-height: 1;
 }
 
 .nav-breadcrumb-title {
+  font-family: var(--font-display);
   font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--color-text-muted);
-  max-width: 200px;
+  font-weight: var(--weight-medium);
+  color: #8ACBD0;
+  max-width: 220px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+/* ── Actions ─────────────────────────────────────────────── */
 .nav-actions {
   margin-left: auto;
   display: flex;
@@ -61,55 +72,59 @@
   position: relative;
 }
 
+/* Avatar: teal gradient circle with indigo letter */
 .nav-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: var(--color-accent-bg);
-  border: 1px solid var(--color-border);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #8ACBD0, #56B6C6);
+  border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: var(--font-display);
   font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--color-accent);
-  transition: border-color 0.15s;
+  font-weight: var(--weight-bold);
+  color: #170C79;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: var(--transition-shadow), transform var(--duration-fast) var(--ease);
 }
 
 .nav-avatar:hover {
-  border-color: var(--color-accent);
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(86, 182, 198, 0.45);
 }
 
+/* ── Dropdown menu — cream background ────────────────────── */
 .nav-menu {
   position: absolute;
-  top: calc(100% + 6px);
+  top: calc(100% + 10px);
   right: 0;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  min-width: 140px;
+  background-color: #EFE3CA;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(23, 12, 121, 0.20), 0 2px 8px rgba(0, 0, 0, 0.10);
+  min-width: 160px;
   overflow: hidden;
-  z-index: 60;
+  z-index: var(--z-dropdown);
 }
 
 .nav-menu-item {
   width: 100%;
-  padding: 9px 14px;
-  font-family: var(--font-sans);
+  padding: 11px 16px;
+  font-family: var(--font-body);
   font-size: var(--text-sm);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   text-align: left;
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--color-text);
-  transition: background-color 0.15s;
+  color: #170C79;
+  transition: var(--transition-color);
 }
 
 .nav-menu-item:hover {
-  background-color: var(--color-bg);
+  background-color: rgba(23, 12, 121, 0.06);
 }
 
 .nav-menu-item.danger {
@@ -117,5 +132,5 @@
 }
 
 .nav-menu-item.danger:hover {
-  background-color: var(--color-danger-bg);
+  background-color: var(--color-danger-subtle);
 }
