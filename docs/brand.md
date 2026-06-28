@@ -16,14 +16,18 @@
 
 The tagline is used on landing pages, email footers, and marketing materials. It is **not** part of the logo lockup — the logo stands alone.
 
+### Theme
+
+**Warm Cream Neumorphism** — a light, soft-extruded surface (`#EFE3CA`) with deep indigo (`#170C79`) and teal (`#56B6C6` / `#8ACBD0`) accents.
+
 ### Brand Personality
 
 | Attribute | What it means in practice |
 |---|---|
-| **Modern** | No skeuomorphic chrome, no rounded bubbly shapes. Precise geometry. |
+| **Modern** | Soft-extruded surfaces and warm tones instead of flat, sterile UI. Tactile, not skeuomorphic. |
 | **Sharp** | Confident decisions. One primary action per screen. No hedging. |
-| **Focused** | Dark surface removes visual noise. The work is the UI. |
-| **Premium** | Navy + amber is a classic luxury pairing. Everything feels intentional. |
+| **Focused** | A single warm ground color removes visual noise. The work is the UI. |
+| **Premium** | Deep indigo + teal on a warm cream ground is a refined pairing. Everything feels intentional. |
 
 ### Brand Values
 
@@ -38,11 +42,11 @@ The tagline is used on landing pages, email footers, and marketing materials. It
 ### Primary Logo (horizontal lockup)
 
 **File:** `apps/frontend/src/assets/brand/syncup-logo.svg`
-**Use on:** Dark backgrounds (#132942 and similar dark surfaces)
+**Use on:** Light/cream backgrounds (`#EFE3CA` and similar light surfaces)
 
 The logo consists of two parts:
-1. **Icon mark** — three kanban column bars in amber gradient, with white task-card indicators
-2. **Wordmark** — "Sync" in `#E2EAF4`, "Up" in `#F5A623` (DM Sans Bold 700)
+1. **Icon mark** — three kanban column bars in a teal-to-indigo gradient, with white task-card indicators
+2. **Wordmark** — "Sync" in `#170C79`, "Up" in `#56B6C6` (DM Sans Bold 700)
 
 ### Icon Mark (standalone)
 
@@ -54,26 +58,26 @@ The three bars represent:
 - Centre (tallest) — In Progress
 - Right (shorter) — Done
 
-The amber glow filter is intentional — it gives the bars a subtle luminance that reads as premium on dark surfaces.
+Bars use a light-teal-to-teal gradient (`#8ACBD0` → `#56B6C6`), which stays visible on both the cream ground and the indigo nav bar. The glow filter is intentional — it gives the bars a subtle luminance that reads as premium.
 
-### Light Background Variant
+### Dark-Surface Variant (light wordmark)
 
 **File:** `apps/frontend/src/assets/brand/syncup-logo-light.svg`
-**Use on:** White or light-gray backgrounds in external contexts (portfolios, PDFs, presentations)
+**Use on:** Dark/indigo backgrounds (e.g. the nav bar, `#170C79`) and other dark external contexts
 
-Wordmark changes: "Sync" → `#132942`, "Up" → `#C07A10` (amber darkened for light-bg contrast ratio).
+The "-light" in the filename refers to the **wordmark color**, not the target background: "Sync" → `#EFE3CA` (cream), "Up" → `#8ACBD0` (light teal) — light text tuned for dark surfaces.
 
 ### Logo Usage Rules
 
 **Do:**
 - Maintain clear space equal to the height of the "S" in SyncUp on all four sides
 - Use the provided SVG files at any size
-- Use the light variant on backgrounds lighter than `#888`
+- Use the dark-surface variant (`syncup-logo-light.svg`) on backgrounds darker than `#888`, such as the indigo nav bar
 
 **Don't:**
-- Recolour the bars (the amber gradient is fixed)
+- Recolour the bars (the teal gradient is fixed)
 - Stretch, rotate, or skew the logo
-- Place the logo on a busy photographic background without a dark scrim
+- Place the logo on a busy photographic background without a scrim
 - Add effects (drop shadows, outlines) — the glow is already embedded
 - Change the font used in the wordmark
 
@@ -92,70 +96,80 @@ Wordmark changes: "Sync" → `#132942`, "Up" → `#C07A10` (amber darkened for l
 
 | Token | Hex | Use |
 |---|---|---|
-| `--surface-base` | `#132942` | Page background — the neumorphic ground plane |
-| `--surface-raised` | `#162E4A` | Cards, panels, form inputs |
-| `--surface-overlay` | `#1A3353` | Modals, dropdowns, tooltips |
-| `--surface-border` | `#1E3A58` | Dividers, input borders |
+| `--surface-base` | `#EFE3CA` | Page background — the neumorphic ground plane |
+| `--surface-raised` | `#F3E9D6` | Cards, panels — float above the ground |
+| `--surface-overlay` | `#EAD9BE` | Modals, dropdowns — slightly recessed |
+| `--surface-border` | `#D8C9AE` | Dividers, input outlines |
 
 ### Neumorphic Shadow Colors
 
 | Token | Hex | Role |
 |---|---|---|
-| `--shadow-light` | `#25486F` | Top-left highlight — surface bowing toward the light source |
-| `--shadow-dark` | `#0A1624` | Bottom-right depth — surface receding from the light |
+| `--shadow-light` | `#FFFDF7` | Warm near-white — top-left highlight |
+| `--shadow-dark` | `#D0C3A5` | Warm tan — bottom-right depth |
 
-The shadow colors are derived from `#132942` with lightness shifted +12% (light) and −8% (dark) in HSL, saturation slightly reduced, hue locked to 212°.
+Both are warm-toned, lightness-shifted variants of the cream ground plane, chosen for a soft embossed look rather than a harsh drop shadow.
 
-### Accent Palette
+### Primary Accent — Deep Indigo
 
 | Token | Hex | Use |
 |---|---|---|
-| `--accent` | `#F5A623` | Primary buttons, active states, links, focus rings |
-| `--accent-hover` | `#D98A18` | Hover state of primary actions |
-| `--accent-light` | `#F7BA4A` | Gradient start, icon fills, decorative elements |
-| `--accent-glow` | `rgba(245,166,35,0.30)` | Amber halo on primary buttons |
-| `--accent-subtle` | `rgba(245,166,35,0.10)` | Highlighted row background, selected state |
+| `--accent` | `#170C79` | Primary buttons, active states, links, focus rings, nav background |
+| `--accent-hover` | `#0E0852` | Hover state of primary actions |
+| `--accent-light` | `#56B6C6` | Teal gradient start — paired with `--accent` on buttons (teal → indigo) |
+| `--accent-glow` | `rgba(23,12,121,0.22)` | Indigo halo on primary buttons/cards |
+| `--accent-subtle` | `rgba(23,12,121,0.08)` | Highlighted row background, selected state |
+
+### Secondary Accent — Teal
+
+| Token | Hex | Use |
+|---|---|---|
+| `--accent2` | `#56B6C6` | Secondary accent, "Up" wordmark, icon fills |
+| `--accent2-light` | `#8ACBD0` | Icon gradient highlight, decorative accents |
+| `--accent2-subtle` | `rgba(86,182,198,0.15)` | Secondary highlighted state, info backgrounds |
 
 ### Text Palette
 
 | Token | Hex | Use |
 |---|---|---|
-| `--text-primary` | `#E2EAF4` | Headings, body copy, labels |
-| `--text-secondary` | `#8BA4C4` | Metadata, captions, helper text |
-| `--text-muted` | `#4D6880` | Placeholders, disabled text |
-| `--text-inverse` | `#132942` | Text on amber/light backgrounds |
-| `--text-accent` | `#F5A623` | Amber text links, callouts |
+| `--text-primary` | `#170C79` | Headings, body copy, labels |
+| `--text-secondary` | `#4A3D8A` | Metadata, captions, helper text |
+| `--text-muted` | `#8178B8` | Placeholders, icons — large/non-critical text only |
+| `--text-inverse` | `#FFFFFF` | Text on dark/indigo surfaces (e.g. gradient buttons) |
+| `--text-accent` | `#170C79` | Indigo links |
 
 ### Semantic Palette
 
 | Token | Hex | Use |
 |---|---|---|
-| `--color-success` | `#3ECF8E` | Completed tasks, success toasts |
-| `--color-warning` | `#F5A623` | Warnings (maps to accent) |
-| `--color-danger` | `#E85D6B` | Destructive actions, error states |
-| `--color-info` | `#48B4E8` | Informational banners |
+| `--color-success` | `#1A6E48` | Completed tasks, success toasts |
+| `--color-warning` | `#966000` | Warnings |
+| `--color-danger` | `#B82030` | Destructive actions, error states |
+| `--color-info` | `#2A7B8C` | Informational banners |
+
+Each semantic color has a `-subtle` rgba variant (`--color-success-subtle`, `--color-warning-subtle`, `--color-danger-subtle`, `--color-info-subtle`) for tinted backgrounds — e.g. toast/badge fills behind the solid text color.
 
 ### Color Palette Visual Reference
 
 ```
 Surface scale (dark → light):
-  #0A1624  shadow-dark
-  #132942  surface-base     ← ground plane
-  #162E4A  surface-raised
-  #1A3353  surface-overlay
-  #1E3A58  surface-border
-  #25486F  shadow-light
+  #D0C3A5  shadow-dark
+  #D8C9AE  surface-border
+  #EAD9BE  surface-overlay
+  #EFE3CA  surface-base     ← ground plane
+  #F3E9D6  surface-raised
+  #FFFDF7  shadow-light
 
 Accent scale:
-  #C07A10  amber (darkened, light-bg use)
-  #D98A18  accent-hover
-  #F5A623  accent             ← primary
-  #F7BA4A  accent-light
+  #0E0852  accent-hover
+  #170C79  accent             ← primary (indigo)
+  #56B6C6  accent2 / accent-light  ← secondary (teal)
+  #8ACBD0  accent2-light
 
 Text scale (dark → light):
-  #4D6880  text-muted
-  #8BA4C4  text-secondary
-  #E2EAF4  text-primary
+  #170C79  text-primary
+  #4A3D8A  text-secondary
+  #8178B8  text-muted
 ```
 
 ---
@@ -188,6 +202,7 @@ Inter   — https://fonts.google.com/specimen/Inter
 | `--text-2xl` | 1.5 | 24 | Page sub-headings |
 | `--text-3xl` | 1.875 | 30 | Page headings |
 | `--text-4xl` | 2.25 | 36 | Hero headings |
+| `--text-5xl` | 3.0 | 48 | Display/marketing headlines (not yet used in-app) |
 
 ### Typography Rules
 
@@ -204,7 +219,7 @@ Inter   — https://fonts.google.com/specimen/Inter
 ### What is Neumorphism?
 
 Neumorphism creates the illusion that elements are extruded from (raised) or pressed into (inset) the background. It requires:
-1. A **single background color** as the ground plane (our `--surface-base: #132942`)
+1. A **single background color** as the ground plane (our `--surface-base: #EFE3CA`)
 2. A **light shadow** at the top-left (where the light source hits)
 3. A **dark shadow** at the bottom-right (the shadow cast)
 4. **Generous border radius** — sharp corners break the extruded effect
@@ -214,24 +229,26 @@ Neumorphism creates the illusion that elements are extruded from (raised) or pre
 ```css
 /* Raised — card, button (default state) */
 box-shadow: var(--neu-md);
-/* = -6px -6px 12px #25486F, 6px 6px 12px #0A1624 */
+/* = -6px -6px 12px #FFFDF7, 6px 6px 12px #D0C3A5 */
 
 /* Small raised — input field, tag */
 box-shadow: var(--neu-sm);
-/* = -3px -3px 6px #25486F, 3px 3px 6px #0A1624 */
+/* = -3px -3px 6px #FFFDF7, 3px 3px 6px #D0C3A5 */
 
 /* Large raised — main panels, sidebar */
 box-shadow: var(--neu-lg);
-/* = -8px -8px 18px #25486F, 8px 8px 18px #0A1624 */
+/* = -10px -10px 20px #FFFDF7, 10px 10px 20px #D0C3A5 */
 
 /* Pressed / active — clicked button, selected state */
 box-shadow: var(--neu-inset);
-/* = inset -4px -4px 8px #25486F, inset 4px 4px 8px #0A1624 */
+/* = inset -3px -3px 6px #FFFDF7, inset 3px 3px 6px #D0C3A5 */
 
-/* Primary CTA — with amber glow */
+/* Primary CTA — with indigo glow */
 box-shadow: var(--neu-accent);
-/* = -4px -4px 8px #25486F, 4px 4px 8px #0A1624, 0 0 20px rgba(245,166,35,0.30) */
+/* = -6px -6px 12px #FFFDF7, 6px 6px 12px #D0C3A5, 0 0 22px rgba(23,12,121,0.22) */
 ```
+
+`--neu-flat` (`0 0 0 transparent`) is also defined — use it to flatten a raised element for disabled or pressed-flush states.
 
 ### Border Radius in Practice
 
@@ -243,11 +260,13 @@ box-shadow: var(--neu-accent);
 | Icon buttons, small chips | `--radius-sm` (8px) |
 | Pills, avatars | `--radius-full` (9999px) |
 
+`--radius-2xl` (32px) is also defined in `tokens.css` but not yet used by any component — reserve it for larger decorative panels.
+
 ### Neumorphism Accessibility Note
 
-Dark neumorphism relies on subtle shadow contrast. Always ensure:
-- Text contrast ratio ≥ 4.5:1 against its background (`#E2EAF4` on `#132942` = 11:1 ✅)
-- Amber `#F5A623` on `#132942` = 5.4:1 ✅ (meets AA)
+Dark, low-contrast palettes aren't the only way to lose accessibility — light neumorphism relies on subtle shadow contrast too. Always ensure:
+- Text contrast ratio ≥ 4.5:1 against its background (`--text-primary #170C79` on `--surface-base #EFE3CA` ≈ 11:1 ✅)
+- Secondary accent teal (`--accent2 #56B6C6`) has low contrast on cream (≈1.9:1) — restrict it to large/bold display use (the "Up" wordmark at `--text-2xl`+) or decorative/gradient fills. Don't use it for body copy, links, or small interactive text (e.g. link hover states) without pairing it with a darker surface or larger weight.
 - Interactive elements have a visible focus ring (use `outline: 2px solid var(--accent)`)
 - Don't rely solely on shadow depth to indicate state — pair with color or icon change
 
@@ -279,25 +298,19 @@ Dark neumorphism relies on subtle shadow contrast. Always ensure:
 ```
 apps/frontend/src/assets/brand/
 ├── syncup-icon.svg          ← 36×36 icon mark (favicon source, app icon)
-├── syncup-logo.svg          ← 160×44 horizontal lockup (dark backgrounds)
-└── syncup-logo-light.svg    ← 160×44 horizontal lockup (light backgrounds)
+├── syncup-logo.svg          ← 160×44 horizontal lockup (light/cream backgrounds)
+└── syncup-logo-light.svg    ← 160×44 horizontal lockup, light wordmark (dark/indigo backgrounds)
 
 apps/frontend/src/styles/
-└── tokens.css               ← full CSS custom property system (import in styles.css)
+└── tokens.css               ← full CSS custom property system (imported by styles.css)
 
 docs/
 └── brand.md                 ← this file
 ```
 
-### Implementing the Design System
+### Design System Status
 
-To activate the token system in the Angular app, add this import at the top of `apps/frontend/src/styles.css`:
-
-```css
-@import './styles/tokens.css';
-```
-
-Then replace the existing `:root` block and component CSS with neumorphic equivalents using the tokens above. The UI redesign is a separate implementation task from this brand definition.
+The token system is implemented and active: `apps/frontend/src/styles.css` opens with `@import './styles/tokens.css';`, and all component stylesheets (`nav`, `dashboard`, `kanban`, `login`, `register`) consume these tokens instead of hardcoded values.
 
 ### Figma
 

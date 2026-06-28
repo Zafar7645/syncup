@@ -14,7 +14,7 @@
     </filter>
   </defs>
 
-  <!-- Kanban column bars — teal (top) → indigo (bottom) gradient -->
+  <!-- Kanban column bars — light teal (top) → teal (bottom) gradient -->
   <g filter="url(#glow)">
     <rect x="0"  y="14" width="9" height="22" rx="3.5" fill="url(#bar-grad)"/>
     <rect x="13" y="5"  width="9" height="31" rx="3.5" fill="url(#bar-grad)"/>
