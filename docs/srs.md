@@ -147,7 +147,7 @@ SyncUp is a standalone web application. It does not integrate with any external 
 
 - Passwords are never stored in plain text (bcrypt, configurable cost factor).
 - JWT secret is loaded from the environment, never hardcoded.
-- CORS is restricted to the configured `CORS_ORIGIN` value.
+- CORS is restricted to the configured `ALLOWED_ORIGIN` value.
 - The global `ValidationPipe` uses `whitelist: true` and `forbidNonWhitelisted: true`, stripping unknown fields from all requests.
 - Ownership of every resource (project, column, task) is verified at the service layer before any operation.
 

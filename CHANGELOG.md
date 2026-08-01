@@ -17,6 +17,12 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Backend: 102 Jest unit tests across all modules — `auth`, `users`, `projects`, `board-columns`, `tasks` — covering services and controllers
 - Frontend: 126 Karma + Jasmine unit tests covering all components (`Login`, `Register`, `Nav`, `ProjectForm`, `Dashboard`, `Kanban`), all services (`Auth`, `ProjectService`, `BoardColumnService`, `TaskService`), `AuthGuard`, and `TokenInterceptor`
 
+**Infrastructure**
+- `docker compose up` runs Postgres, backend, and frontend together via `docker-compose.yml`
+- `apps/backend/Dockerfile`: multi-stage build bundling all dependencies into a single `dist/main.js` (no `node_modules` at runtime), running as the unprivileged `node` user
+- `apps/frontend/Dockerfile`: builds the Angular app and serves it via nginx, with `nginx.conf.template` proxying `/api/*` to the backend container
+- Root `.env.example` for Docker Compose configuration, separate from `apps/backend/.env` used by the native workflow
+
 ### Fixed
 
 - `tsconfig.json` (`backend` and `frontend`): removed deprecated `baseUrl`, added explicit `rootDir`, dropped `../../libs/**/*` from backend `include` — fixes TypeScript language server errors in editors

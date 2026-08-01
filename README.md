@@ -45,6 +45,7 @@ SyncUp is a full-stack Kanban board application where users can manage projects,
 | **Database** | PostgreSQL 15 |
 | **Shared** | TypeScript DTOs and validation constants (NPM Workspaces) |
 | **Tooling** | ESLint, Prettier, Angular CLI, NestJS CLI |
+| **Containers** | Docker, Docker Compose, nginx (serves the frontend, proxies `/api/*`) |
 
 ## 📋 Prerequisites
 
@@ -53,6 +54,8 @@ Before you start, make sure you have the following installed:
 - [Node.js](https://nodejs.org) **v20 or later**
 - [npm](https://npmjs.com) **v10 or later**
 - [PostgreSQL](https://postgresql.org) **v15 or later** running on port `5432`
+
+Running via Docker instead? You only need [Docker](https://docs.docker.com/get-docker/) — see [Quick Start with Docker](#-quick-start-with-docker) below.
 
 ## 🚀 Quick Start
 
@@ -82,13 +85,7 @@ psql -U <your_user> -d syncup -f database/init.sql
 
 ### 4. Configure the backend
 
-Create the environment file at `apps/backend/.env`:
-
-```bash
-cp apps/backend/.env.example apps/backend/.env
-```
-
-Then fill in your values (see [Environment Variables](#-environment-variables) below).
+Create `apps/backend/.env` and fill in your values (see [Environment Variables](#-environment-variables) below).
 
 ### 5. Start the backend
 
@@ -103,6 +100,29 @@ npm run start:backend
 npm run start:frontend
 # App running at http://localhost:4200
 ```
+
+## 🐳 Quick Start with Docker
+
+Prefer containers? This runs Postgres, the backend, and the frontend together — no local Node.js or PostgreSQL install required.
+
+```bash
+git clone https://github.com/Zafar7645/syncup.git
+cd syncup
+cp .env.example .env   # fill in your own values
+docker compose up -d --build
+# Frontend: http://localhost:4200
+# Backend:  http://localhost:3000
+```
+
+Useful commands:
+
+```bash
+docker compose logs -f backend   # tail a service's logs
+docker compose down              # stop and remove containers (keeps the db volume)
+docker compose down -v           # also drop the db volume (needed after changing DB_USERNAME/DB_PASSWORD)
+```
+
+This is an alternative to the native workflow above, not a replacement — the compose file builds the backend into a single bundled `dist/main.js` (no `node_modules` in the runtime image) and serves the frontend's static build via nginx, which proxies `/api/*` to the backend container.
 
 ## 🧪 Running Tests
 
@@ -125,7 +145,9 @@ cd apps/frontend && ng test --watch=false --browsers=ChromeHeadless
 
 ## 🔧 Environment Variables
 
-Create `apps/backend/.env` with the following variables:
+Two separate `.env` files depending on how you run the app — see [CLAUDE.md](CLAUDE.md#environment-setup) for the full breakdown of which workflow reads which file.
+
+For the native workflow, create `apps/backend/.env` with the following variables:
 
 | Variable | Description | Example |
 |---|---|---|
@@ -133,10 +155,12 @@ Create `apps/backend/.env` with the following variables:
 | `DB_PORT` | PostgreSQL port | `5432` |
 | `DB_USERNAME` | Database user | `postgres` |
 | `DB_PASSWORD` | Database password | `secret` |
-| `DB_NAME` | Database name | `syncup` |
+| `DB_DATABASE` | Database name | `syncup` |
 | `JWT_SECRET` | Secret key for signing JWT tokens | `a-long-random-string` |
 | `BCRYPT_SALT_ROUNDS` | bcrypt cost factor for password hashing | `10` |
-| `CORS_ORIGIN` | Allowed frontend origin | `http://localhost:4200` |
+| `ALLOWED_ORIGIN` | Allowed frontend origin (CORS) | `http://localhost:4200` |
+
+For Docker, copy the root [.env.example](.env.example) to `.env` instead — same variable names, plus `DB_PORT`/`BACKEND_PORT`/`FRONTEND_PORT` for host port mappings, and no `DB_HOST` (compose sets it internally).
 
 ## 📁 Project Structure
 
@@ -144,6 +168,7 @@ Create `apps/backend/.env` with the following variables:
 syncup/
 ├── apps/
 │   ├── backend/          # NestJS REST API
+│   │   ├── Dockerfile        # Multi-stage build → bundled dist/main.js
 │   │   └── src/
 │   │       ├── auth/         # JWT authentication
 │   │       ├── users/        # User entity and service
@@ -151,6 +176,8 @@ syncup/
 │   │       ├── board-columns/# Kanban column CRUD
 │   │       └── tasks/        # Task CRUD with ordering
 │   └── frontend/         # Angular 20 SPA
+│       ├── Dockerfile             # Builds app, serves via nginx
+│       ├── nginx.conf.template    # Proxies /api/* to the backend container
 │       └── src/app/
 │           ├── auth/         # Login, register, guards, interceptor
 │           ├── projects/     # Services and models for all entities
@@ -161,6 +188,7 @@ syncup/
 │   └── shared-validation/# Email and password validation constants
 ├── database/
 │   └── init.sql          # PostgreSQL schema
+├── docker-compose.yml    # Runs db, backend, frontend together
 └── docs/                 # Architecture, API reference, user guide, SRS
 ```
 

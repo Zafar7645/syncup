@@ -38,6 +38,21 @@ ng lint                  # ESLint
 ng build                 # Production build to dist/
 ```
 
+### Docker
+
+Runs the whole stack (Postgres, backend, frontend) in containers — an alternative to the native workflow above, not a replacement for it. Requires a root-level `.env` (copy from `.env.example`); see [Environment Setup](#environment-setup).
+
+```bash
+docker compose up -d --build   # Build images and start db, backend, frontend
+docker compose logs -f backend # Tail a single service's logs
+docker compose down            # Stop and remove containers (keeps the db volume)
+docker compose down -v         # Also drop the db volume (required after changing DB_USERNAME/DB_PASSWORD)
+```
+
+- `apps/backend/Dockerfile` — multi-stage build; `nest build` (webpack) bundles all dependencies into a single `dist/main.js`, so the runtime image ships no `node_modules` and runs as the unprivileged `node` user.
+- `apps/frontend/Dockerfile` — builds the Angular app, then serves the static `browser/` output via `nginx`. `apps/frontend/nginx.conf.template` proxies `/api/*` to the `backend` container and is rendered from `BACKEND_HOST`/`BACKEND_PORT` at container start.
+- The frontend is reached at `http://localhost:${FRONTEND_PORT:-4200}`; Postgres is bound to `127.0.0.1` only, not exposed beyond the host.
+
 ## Architecture
 
 ### Entity Relationships
@@ -86,20 +101,24 @@ Both frontend form validators and backend class-validator decorators consume the
 
 ## Environment Setup
 
-Backend requires a `.env` file at `apps/backend/.env`:
+Two separate `.env` files depending on how you run the app — they are not interchangeable and neither is read by the other workflow.
+
+**Native (`npm run start:backend`)** — requires `apps/backend/.env`:
 
 ```
 DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=...
 DB_PASSWORD=...
-DB_NAME=...
+DB_DATABASE=...
 JWT_SECRET=...
 BCRYPT_SALT_ROUNDS=10
-CORS_ORIGIN=http://localhost:4200
+ALLOWED_ORIGIN=http://localhost:4200
 ```
 
-Database schema is in `database/init.sql`. PostgreSQL must be running on `:5432`.
+PostgreSQL must be running on `:5432` yourself (e.g. `docker compose up -d db`, or a local install). Database schema is in `database/init.sql`.
+
+**Docker (`docker compose up`)** — requires a root-level `.env` (copy from `.env.example`). Same variable names, but `DB_HOST` is not needed (compose sets it to `db` internally) and it additionally sets `DB_PORT`/`BACKEND_PORT`/`FRONTEND_PORT` for host port mappings. See [Docker](#docker) above. `DB_USERNAME`/`DB_PASSWORD` are only applied the first time the `pgdata` volume is created — changing them later requires `docker compose down -v`.
 
 ## Path Aliases
 
