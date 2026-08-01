@@ -9,6 +9,10 @@
 [![Node.js](https://img.shields.io/badge/Node.js-20%2B-green)](https://nodejs.org)
 [![Angular](https://img.shields.io/badge/Angular-20-red)](https://angular.dev)
 [![NestJS](https://img.shields.io/badge/NestJS-11-ea2845)](https://nestjs.com)
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://syncup-dusky.vercel.app)
+
+**[Live Demo →](https://syncup-dusky.vercel.app)**
+*(hosted on free tiers — the first request after a period of inactivity may take a few seconds to wake up)*
 
 </div>
 
