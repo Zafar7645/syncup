@@ -185,14 +185,16 @@ sequenceDiagram
 |---|---|
 | Password storage | bcrypt (configurable cost factor via `BCRYPT_SALT_ROUNDS`) |
 | Session | Stateless JWT, signed with `JWT_SECRET`, 60-minute expiry |
-| Transport | CORS restricted to `CORS_ORIGIN` env variable |
+| Transport | CORS restricted to `ALLOWED_ORIGIN` env variable |
 | Input sanitisation | NestJS `ValidationPipe` with `whitelist: true`, `forbidNonWhitelisted: true` |
 | Authorisation | Service-layer ownership checks on every resource access |
 | Token delivery | HTTP `Authorization: Bearer` header (not cookies) |
 
 ---
 
-## 9. Deployment Topology (Development)
+## 9. Deployment Topology
+
+### Native (development)
 
 ```
 Developer machine
@@ -201,4 +203,20 @@ Developer machine
 └── Angular DevServer on :4200  (npm run start:frontend)
 ```
 
-Production topology is not defined in v1.0.0. The project is intended to be deployed by contributors as they see fit — Docker, cloud VMs, PaaS, etc.
+### Docker Compose
+
+```mermaid
+graph TD
+    User(["👤 User\n(Browser)"])
+    FE["frontend container\nnginx :80 → host FRONTEND_PORT"]
+    BE["backend container\nNestJS :3000 → host BACKEND_PORT"]
+    DB[("db container\nPostgreSQL :5432\n(127.0.0.1 only)")]
+
+    User -->|"http://localhost:FRONTEND_PORT"| FE
+    FE -->|"proxies /api/*\n(nginx.conf.template)"| BE
+    BE -->|"SQL (TypeORM)"| DB
+```
+
+`docker compose up -d --build` builds and runs all three services. The backend image bundles all dependencies into a single `dist/main.js` (no `node_modules` at runtime) and runs as the unprivileged `node` user; the frontend image serves the static Angular build through nginx. See the root [README](../../README.md#-quick-start-with-docker) for usage and [CLAUDE.md](../../CLAUDE.md#docker) for image build details.
+
+Further production topology (behind a reverse proxy, TLS termination, managed Postgres, etc.) is not defined — the project is intended to be deployed by contributors as they see fit beyond this baseline.
