@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: syncup-backend
+    runtime: docker
+    plan: free
+    dockerfilePath: apps/backend/Dockerfile
+    dockerContext: .
+    healthCheckPath: /
+    envVars:
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: '5432'
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_SSL
+        value: 'true'
+      - key: JWT_SECRET
+        sync: false
+      - key: BCRYPT_SALT_ROUNDS
+        value: '10'
+      - key: ALLOWED_ORIGIN
+        sync: false
